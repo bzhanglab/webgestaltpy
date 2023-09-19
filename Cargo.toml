@@ -9,5 +9,5 @@ name = "webgestaltpy"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = "0.19.0"
+pyo3 = "0.19.2"
 webgestalt_lib = {git = "https://github.com/bzhanglab/webgestalt_rust.git"}
