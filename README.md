@@ -22,5 +22,3 @@ rye shell # initialize shell so the python command executes the local version
 maturin develop # -r # add -r to build the full release version of the rust library.
 python test.py # run the test script
 ```
-
-
