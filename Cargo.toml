@@ -10,4 +10,5 @@ crate-type = ["cdylib"]
 
 [dependencies]
 pyo3 = "0.19.2"
+rustc-hash = "1.1.0"
 webgestalt_lib = {git = "https://github.com/bzhanglab/webgestalt_rust.git"}

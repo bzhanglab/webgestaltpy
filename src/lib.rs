@@ -1,40 +1,28 @@
 use std::time::Instant;
 
 use pyo3::prelude::*;
+use pyo3::types::PyDict;
 use webgestalt_lib::methods::gsea::FullGSEAResult;
 
-#[pyclass(mapping, dict)]
-#[pyo3(get_all, set_all, name = "GSEAResult")]
-struct GSEAResultWrapper {
-    pub set: String,
-    pub p: f64,
-    pub fdr: f64,
-    pub es: f64,
-    pub nes: f64,
-    pub leading_edge: i32,
-}
-
-impl GSEAResultWrapper {
-    /// Clone then convert [`webgestalt_lib::methods::gsea::FullGSEAResult`] to [`GSEAResultWrapper`].
-    fn from_lib(obj: FullGSEAResult) -> GSEAResultWrapper {
-        let newobj = obj.clone();
-        GSEAResultWrapper {
-            set: newobj.set,
-            p: newobj.p,
-            fdr: newobj.fdr,
-            es: newobj.es,
-            nes: newobj.nes,
-            leading_edge: newobj.leading_edge,
-        }
-    }
+fn result_to_dict(obj: FullGSEAResult, py: Python) -> &PyDict {
+    let res = vec![
+        ("set".to_object(py), obj.set.to_object(py)),
+        ("p".to_object(py), obj.p.to_object(py)),
+        ("fdr".to_object(py), obj.fdr.to_object(py)),
+        ("es".to_object(py), obj.es.to_object(py)),
+        ("nes".to_object(py), obj.nes.to_object(py)),
+        ("leading_edge".to_object(py), obj.leading_edge.to_object(py)),
+    ]
+    .to_object(py);
+    PyDict::from_sequence(py, res).unwrap()
 }
 
 /// Run single-omic GSEA with files at provided paths.
-/// 
+///
 /// # Parameters
 /// - `gmt` - `String` of the path to the gmt file of interest
 /// - `rank` - `String` of the path to the rank file of interest. Tab separated.
-/// 
+///
 /// # Returns
 ///
 /// Returns a [`PyResult<Vec<GSEAResultWrapper>>`] containing the GSEA results for every set.
@@ -43,16 +31,13 @@ impl GSEAResultWrapper {
 ///
 /// Panics if the GMT or the rank file is malformed.
 #[pyfunction]
-fn gsea_from_files(gmt: String, rank: String) -> PyResult<Vec<GSEAResultWrapper>> {
+fn gsea_from_files(py: Python, gmt: String, rank: String) -> PyResult<Vec<&PyDict>> {
     let gene_list = webgestalt_lib::readers::read_rank_file(rank);
     let gmt = webgestalt_lib::readers::read_gmt_file(gmt);
     let start = Instant::now();
     let res: Vec<FullGSEAResult> =
         webgestalt_lib::methods::gsea::gsea(gene_list.unwrap(), gmt.unwrap());
-    let new_res: Vec<GSEAResultWrapper> = res
-        .into_iter()
-        .map(GSEAResultWrapper::from_lib)
-        .collect();
+    let new_res: Vec<&PyDict> = res.into_iter().map(|x| result_to_dict(x, py)).collect();
     let duration = start.elapsed();
     println!("New Hash\nTime took: {:?}", duration);
     Ok(new_res)
