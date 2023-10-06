@@ -41,7 +41,7 @@ fn ora_result_to_dict(obj: ORAResult, py: Python) -> &PyDict {
 ///
 /// # Panics
 ///
-/// Panics if the GMT or the rank file is malformed.
+/// Panics if the GMT or the rank file is malformed or not at specified path.
 #[pyfunction]
 fn gsea_from_files(py: Python, gmt: String, rank: String) -> PyResult<Vec<&PyDict>> {
     let gene_list = webgestalt_lib::readers::read_rank_file(rank);
@@ -54,6 +54,20 @@ fn gsea_from_files(py: Python, gmt: String, rank: String) -> PyResult<Vec<&PyDic
     println!("GSEA\nTime took: {:?}", duration);
     Ok(new_res)
 }
+
+/// Run a single-omic ORA with files at the provided paths.
+///
+/// # Parameters
+/// - `gmt` - `String` of the path to the gmt file of interest
+/// - `rank` - `String` of the path to the rank file of interest. Tab separated.
+///
+/// # Returns
+///
+/// Returns a [`PyResult<Vec<GSEAResultWrapper>>`] containing the GSEA results for every set.
+///
+/// # Panics
+///
+/// Panics if the any file is malformed or not at specified path.
 
 #[pyfunction]
 fn ora_from_files(
