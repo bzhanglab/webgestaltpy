@@ -2,7 +2,7 @@ import webgestaltpy
 
 x = webgestaltpy.gsea_from_files("data/ktest.gmt", "data/test.rnk")
 print(
-    "GSEA: There are {0} pathways with significant p values".format(
+    "GSEA: There are {0} pathways with significant fdr values".format(
         len([i for i in x if i["fdr"] < 0.05])
     )
 )
