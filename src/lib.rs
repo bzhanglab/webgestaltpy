@@ -2,10 +2,10 @@ use std::time::Instant;
 
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
-use webgestalt_lib::methods::gsea::{FullGSEAResult, GSEAConfig};
+use webgestalt_lib::methods::gsea::{GSEAConfig, GSEAResult};
 use webgestalt_lib::methods::ora::{ORAConfig, ORAResult};
 
-fn result_to_dict(obj: FullGSEAResult, py: Python) -> &PyDict {
+fn result_to_dict(obj: GSEAResult, py: Python) -> &PyDict {
     let res = vec![
         ("set".to_object(py), obj.set.to_object(py)),
         ("p".to_object(py), obj.p.to_object(py)),
@@ -52,7 +52,7 @@ fn gsea_from_files(py: Python, gmt: String, rank: String) -> PyResult<Vec<&PyDic
     let gene_list = webgestalt_lib::readers::read_rank_file(rank);
     let gmt = webgestalt_lib::readers::read_gmt_file(gmt);
     let start = Instant::now();
-    let res: Vec<FullGSEAResult> = webgestalt_lib::methods::gsea::gsea(
+    let res: Vec<GSEAResult> = webgestalt_lib::methods::gsea::gsea(
         gene_list.unwrap(),
         gmt.unwrap(),
         GSEAConfig::default(),
