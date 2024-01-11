@@ -4,13 +4,19 @@ A python package containing bindings to the underlying Rust library [webgestalt_
 
 ## Features
 
-- Compute GSEA, ORA, and NTA
+- Compute GSEA and ORA
 - Run a meta-analysis combining multiple lists
 - Combine multiple lists into a single analysis type
 
 The output of the python package is the values. This does not generate any HTML reports. For reports, please use the [R package](https://github.com/bzhanglab/webgestaltr).
 
 ## Installation
+
+```
+pip install webgestaltpy
+```
+
+## Development
 
 WebGestaltPy uses [maturin](https://www.maturin.rs) and [rye](https://rye-up.com) to build the full project. To build WebGestaltPy, run the following commands
 
