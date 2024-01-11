@@ -25,7 +25,8 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install mkdocs-material
-      - run: pip install maturin
-      - run: maturin develop
+      - uses: PyO3/maturin-action@v1
+        with:
+          command: develop
       - run: python build_docs.py
       - run: mkdocs gh-deploy --force
