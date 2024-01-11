@@ -8,8 +8,16 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+repo_name: bzhanglab/webgestaltpy
 theme:
+  palette:
+    scheme: default
+    primary: white
+  logo: assets/logo.svg
+  favicon: assets/favicon-32x32.png
   name: material
+  icon:
+    repo: material/github
   features:
     - navigation.tabs
     - content.code.copy

@@ -1,4 +1,4 @@
-name: ci 
+name: docs
 on:
   push:
     branches:
@@ -24,5 +24,8 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material 
+      - run: pip install mkdocs-material
+      - run: pip install maturin
+      - run: maturin develop
+      - run: python build_docs.py
       - run: mkdocs gh-deploy --force
