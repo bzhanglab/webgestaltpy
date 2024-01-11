@@ -1,4 +1,3 @@
-use std::error::Error;
 use std::time::Instant;
 
 use pyo3::prelude::*;
