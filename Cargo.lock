@@ -594,7 +594,8 @@ checksum = "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423"
 [[package]]
 name = "webgestalt_lib"
 version = "0.1.0"
-source = "git+https://github.com/bzhanglab/webgestalt_rust.git#5fd6c64238a9f5a39566a95d47786e1290bceb1d"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c001c59ee0aee8eba0a7714e4fa36b6e4ba466be9f48f261d2fa5491db6022a7"
 dependencies = [
  "ahash",
  "csv",
