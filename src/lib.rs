@@ -4,6 +4,7 @@ use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
 use webgestalt_lib::methods::gsea::{GSEAConfig, GSEAResult};
+use webgestalt_lib::methods::multiomics::{multiomic_ora, ORAJob};
 use webgestalt_lib::methods::ora::{ORAConfig, ORAResult};
 
 fn result_to_dict(obj: GSEAResult, py: Python) -> Result<&PyDict, PyErr> {
@@ -78,12 +79,12 @@ fn ora_result_to_dict(obj: ORAResult, py: Python) -> Result<&PyDict, PyErr> {
 /// ]
 /// ```
 #[pyfunction]
-fn gsea_from_files(py: Python, gmt: String, rank: String) -> PyResult<Vec<&PyDict>> {
-    let gene_list = webgestalt_lib::readers::read_rank_file(rank);
+fn gsea(py: Python, gmt: String, rank: String) -> PyResult<Vec<&PyDict>> {
+    let analyte_list = webgestalt_lib::readers::read_rank_file(rank);
     let gmt = webgestalt_lib::readers::read_gmt_file(gmt);
     let start = Instant::now();
     let res: Vec<GSEAResult> = webgestalt_lib::methods::gsea::gsea(
-        gene_list.unwrap(),
+        analyte_list.unwrap(),
         gmt.unwrap(),
         GSEAConfig::default(),
         None,
@@ -101,7 +102,7 @@ fn gsea_from_files(py: Python, gmt: String, rank: String) -> PyResult<Vec<&PyDic
 ///
 /// # Parameters
 /// - `gmt_path` - `String` of the path to the gmt file of interest
-/// - `gene_list_path` - `String` of the path to the gene file of interest.
+/// - `analyte_list_path` - `String` of the path to the analyte file of interest.
 /// - `reference_list_path`
 ///
 /// # Returns
@@ -145,17 +146,17 @@ fn gsea_from_files(py: Python, gmt: String, rank: String) -> PyResult<Vec<&PyDic
 /// ]
 /// ```
 #[pyfunction]
-fn ora_from_files(
+fn ora(
     py: Python,
     gmt_path: String,
-    gene_list_path: String,
+    analyte_list_path: String,
     reference_list_path: String,
 ) -> PyResult<Vec<&PyDict>> {
-    let (gmt, gene_list, reference) =
-        webgestalt_lib::readers::read_ora_files(gmt_path, gene_list_path, reference_list_path);
+    let (gmt, analyte_list, reference) =
+        webgestalt_lib::readers::read_ora_files(gmt_path, analyte_list_path, reference_list_path);
     let start = Instant::now();
     let res: Vec<ORAResult> =
-        webgestalt_lib::methods::ora::get_ora(&gene_list, &reference, gmt, ORAConfig::default());
+        webgestalt_lib::methods::ora::get_ora(&analyte_list, &reference, gmt, ORAConfig::default());
     let new_res: Vec<&PyDict> = res
         .into_iter()
         .map(|x| ora_result_to_dict(x, py).unwrap())
@@ -169,7 +170,7 @@ fn ora_from_files(
 ///
 /// # Parameters
 /// - `gmt_path` - `String` of the path to the gmt file of interest
-/// - `gene_list_paths` -  Lists of `String`s of the path to the gene files of interest.
+/// - `analyte_list_paths` -  Lists of `String`s of the path to the analyte files of interest.
 /// - `reference_list_paths` - Lists of `String`s of the paths to reference lists.
 ///
 /// # Returns
@@ -213,28 +214,58 @@ fn ora_from_files(
 /// ]
 /// ```
 #[pyfunction]
-fn meta_ora_from_files(
+fn meta_ora(
     py: Python,
     gmt_path: String,
-    gene_list_paths: Vec<String>,
+    analyte_list_paths: Vec<String>,
     reference_list_paths: Vec<String>,
-) -> PyResult<()> {
-    if gene_list_paths.len() != reference_list_paths.len() {
+) -> PyResult<Vec<Vec<&PyDict>>> {
+    if analyte_list_paths.len() != reference_list_paths.len() {
+        // Verify list sizes
         Err(PyValueError::new_err(format!(
             "Number of gene lists ({0}) and reference lists ({1}) don't match!",
-            gene_list_paths.len(),
+            analyte_list_paths.len(),
             reference_list_paths.len()
         )))
     } else {
-        Ok(())
+        let mut jobs: Vec<ORAJob> = Vec::new();
+        for (i, analyte_list_path) in analyte_list_paths.iter().enumerate() {
+            let (gmt, analyte_list, reference) = webgestalt_lib::readers::read_ora_files(
+                gmt_path.clone(),
+                analyte_list_path.clone(),
+                reference_list_paths[i].clone(),
+            );
+            let new_job: ORAJob = ORAJob {
+                gmt: gmt.clone(),
+                interest_list: analyte_list.clone(),
+                reference_list: reference.clone(),
+                config: ORAConfig::default(),
+            };
+            jobs.push(new_job);
+        }
+        let rust_result = multiomic_ora(
+            jobs,
+            webgestalt_lib::methods::multiomics::MultiOmicsMethod::Meta(
+                webgestalt_lib::methods::multiomics::MetaAnalysisMethod::Stouffer,
+            ),
+        );
+        let mut final_results: Vec<Vec<&PyDict>> = Vec::new();
+        for res in rust_result {
+            let converted = res
+                .into_iter()
+                .map(|x| ora_result_to_dict(x, py).unwrap())
+                .collect();
+            final_results.push(converted);
+        }
+        Ok(final_results)
     }
 }
 
 /// High performance enrichment methods implemented in Rust, with Python bindings.
 #[pymodule]
 fn webgestaltpy(_py: Python, m: &PyModule) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(gsea_from_files, m)?)?;
-    m.add_function(wrap_pyfunction!(ora_from_files, m)?)?;
-    m.add_function(wrap_pyfunction!(meta_ora_from_files, m)?)?;
+    m.add_function(wrap_pyfunction!(gsea, m)?)?;
+    m.add_function(wrap_pyfunction!(ora, m)?)?;
+    m.add_function(wrap_pyfunction!(meta_ora, m)?)?;
     Ok(())
 }

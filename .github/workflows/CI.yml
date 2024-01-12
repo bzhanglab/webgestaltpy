@@ -119,3 +119,40 @@ jobs:
         with:
           command: upload
           args: --non-interactive --skip-existing *
+
+  build-docs:
+    runs-on: ubuntu-latest
+    needs: release
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure Git Credentials
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
+      - uses: actions/cache@v3
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+      - name: Install mkdocs-material
+        run: pip install mkdocs-material
+      - name: Install mike
+        run: pip install mike
+      - uses: PyO3/maturin-action@v1
+        with:
+          command: build
+      - run: pip install .
+      - run: python build_docs.py
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+      - name: Deploy with mike 🚀
+        run: |
+          git fetch origin gh-pagess
+          mike deploy --push ${{ steps.extract_branch.outputs.branch }} latest
