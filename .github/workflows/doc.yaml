@@ -24,17 +24,15 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material
+      - name: Install mkdocs-material
+        run: pip install mkdocs-material
+      - name: Install mike
+        run: pip install mike
       - uses: PyO3/maturin-action@v1
         with:
           command: build
       - run: pip install .
       - run: python build_docs.py
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
       - name: Deploy with mike 🚀
         run: |
-          mike delete dev
-          mike deploy --push ${{ steps.extract_branch.outputs.branch }}
+          mike deploy --push dev
