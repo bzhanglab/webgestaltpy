@@ -16,6 +16,7 @@ rye = { dev-dependencies = [
     "pandas>=1.1.5",
     "mkdocs-material>=9.2.8",
     "maturin>=1.4.0",
+    "mike>=2.0.0",
 ] }
 
 [tool.maturin]

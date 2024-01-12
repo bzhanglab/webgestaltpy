@@ -30,4 +30,11 @@ jobs:
           command: build
       - run: pip install .
       - run: python build_docs.py
-      - run: mkdocs gh-deploy --force
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+      - name: Deploy with mike 🚀
+        run: |
+          mike delete dev
+          mike deploy --push ${{ steps.extract_branch.outputs.branch }}

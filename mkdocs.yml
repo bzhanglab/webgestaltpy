@@ -1,5 +1,16 @@
 site_name: WebGestaltPy
 repo_url: https://github.com/bzhanglab/webgestaltpy
+site_url: https://bzhanglab.github.io/webgestaltpy/
+plugins:
+  - mike:
+      # These fields are all optional; the defaults are as below...
+      alias_type: symlink
+      redirect_template: null
+      deploy_prefix: ''
+      canonical_version: null
+      version_selector: true
+      css_dir: css
+      javascript_dir: jy
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
@@ -10,14 +21,18 @@ markdown_extensions:
   - pymdownx.superfences
 repo_name: bzhanglab/webgestaltpy
 theme:
+  name: material
+  custom_dir: docs/overrides
   palette:
     scheme: default
     primary: white
   logo: assets/logo.svg
   favicon: assets/favicon-32x32.png
-  name: material
   icon:
     repo: material/github
   features:
     - navigation.tabs
     - content.code.copy
+extra:
+  version:
+    provider: mike

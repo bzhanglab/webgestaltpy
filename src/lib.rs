@@ -1,5 +1,6 @@
 use std::time::Instant;
 
+use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
 use webgestalt_lib::methods::gsea::{GSEAConfig, GSEAResult};
@@ -38,7 +39,7 @@ fn ora_result_to_dict(obj: ORAResult, py: Python) -> Result<&PyDict, PyErr> {
 ///
 /// # Returns
 ///
-/// Returns a [`PyResult<Vec<GSEAResultWrapper>>`] containing the GSEA results for every set.
+/// Returns a list containing the GSEA results for every set.
 ///
 /// # Panics
 ///
@@ -53,6 +54,8 @@ fn ora_result_to_dict(obj: ORAResult, py: Python) -> Result<&PyDict, PyErr> {
 ///
 /// print(res[0:2]) # print first two results
 /// ```
+///
+/// **Output**
 ///
 /// ```
 /// [
@@ -122,7 +125,7 @@ fn gsea_from_files(py: Python, gmt: String, rank: String) -> PyResult<Vec<&PyDic
 /// **Output**
 ///
 /// ```
-///  [
+/// [
 ///   {
 ///     'set': 'hsa00010',
 ///     'p': 0.7560574551180973,
@@ -162,10 +165,29 @@ fn ora_from_files(
     Ok(new_res)
 }
 
+#[pyfunction]
+fn meta_ora_from_files(
+    py: Python,
+    gmt_path: String,
+    gene_list_paths: Vec<String>,
+    reference_list_paths: Vec<String>,
+) -> PyResult<()> {
+    if gene_list_paths.len() != reference_list_paths.len() {
+        Err(PyValueError::new_err(format!(
+            "Number of gene lists ({0}) and reference lists ({1}) don't match!",
+            gene_list_paths.len(),
+            reference_list_paths.len()
+        )))
+    } else {
+        Ok(())
+    }
+}
+
 /// High performance enrichment methods implemented in Rust, with Python bindings.
 #[pymodule]
 fn webgestaltpy(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(gsea_from_files, m)?)?;
     m.add_function(wrap_pyfunction!(ora_from_files, m)?)?;
+    m.add_function(wrap_pyfunction!(meta_ora_from_files, m)?)?;
     Ok(())
 }
