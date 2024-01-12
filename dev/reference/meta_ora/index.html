@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://bzhanglab.github.io/webgestaltpy/dev/reference/ora_from_files/">
+        <link rel="canonical" href="https://bzhanglab.github.io/webgestaltpy/dev/reference/meta_ora/">
       
       
-        <link rel="prev" href="../meta_ora_from_files/">
+        <link rel="prev" href="../gsea/">
       
       
-        <link rel="next" href="../webgestaltpy/">
+        <link rel="next" href="../ora/">
       
       
       <link rel="icon" href="../../assets/favicon-32x32.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>ora_from_files - WebGestaltPy</title>
+        <title>meta_ora - WebGestaltPy</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ora_from_files" class="md-skip">
+        <a href="#meta_ora" class="md-skip">
           Skip to content
         </a>
       
@@ -121,7 +121,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ora_from_files
+              meta_ora
             
           </span>
         </div>
@@ -417,32 +417,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../gsea_from_files/" class="md-nav__link">
+      <a href="../gsea/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    gsea_from_files
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../meta_ora_from_files/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    meta_ora_from_files
+    gsea
   </span>
   
 
@@ -472,7 +451,7 @@
           
   
   <span class="md-ellipsis">
-    ora_from_files
+    meta_ora
   </span>
   
 
@@ -483,7 +462,7 @@
         
   
   <span class="md-ellipsis">
-    ora_from_files
+    meta_ora
   </span>
   
 
@@ -544,6 +523,27 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ora/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ora
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -657,13 +657,13 @@
   
 
 
-<h1 id="ora_from_files"><code>ora_from_files</code></h1>
-<p>Run a single-omic ORA with files at the provided paths.</p>
+<h1 id="meta_ora"><code>meta_ora</code></h1>
+<p>Run a meta-analysis ORA with files at the provided paths.</p>
 <h2 id="parameters">Parameters</h2>
 <ul>
 <li><code>gmt_path</code> - <code>String</code> of the path to the gmt file of interest</li>
-<li><code>gene_list_path</code> - <code>String</code> of the path to the gene file of interest.</li>
-<li><code>reference_list_path</code></li>
+<li><code>analyte_list_paths</code> -  Lists of <code>String</code>s of the path to the analyte files of interest.</li>
+<li><code>reference_list_paths</code> - Lists of <code>String</code>s of the paths to reference lists.</li>
 </ul>
 <h2 id="returns">Returns</h2>
 <p>Returns a list of dictionaries with the results containing the ORA results for every set.</p>
