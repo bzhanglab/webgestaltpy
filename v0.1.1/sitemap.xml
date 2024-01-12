@@ -10,4 +10,24 @@
          <lastmod>2024-01-12</lastmod>
          <changefreq>daily</changefreq>
     </url>
+    <url>
+         <loc>https://bzhanglab.github.io/webgestaltpy/v0.1.1/reference/</loc>
+         <lastmod>2024-01-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://bzhanglab.github.io/webgestaltpy/v0.1.1/reference/gsea_from_files/</loc>
+         <lastmod>2024-01-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://bzhanglab.github.io/webgestaltpy/v0.1.1/reference/ora_from_files/</loc>
+         <lastmod>2024-01-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://bzhanglab.github.io/webgestaltpy/v0.1.1/reference/webgestaltpy/</loc>
+         <lastmod>2024-01-12</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
 </urlset>
