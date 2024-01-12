@@ -165,6 +165,53 @@ fn ora_from_files(
     Ok(new_res)
 }
 
+/// Run a meta-analysis ORA with files at the provided paths.
+///
+/// # Parameters
+/// - `gmt_path` - `String` of the path to the gmt file of interest
+/// - `gene_list_paths` -  Lists of `String`s of the path to the gene files of interest.
+/// - `reference_list_paths` - Lists of `String`s of the paths to reference lists.
+///
+/// # Returns
+///
+/// Returns a list of dictionaries with the results containing the ORA results for every set.
+///
+/// # Panics
+///
+/// Panics if the any file is malformed or not at specified path.
+///
+/// # Example
+///
+/// ```python
+/// import webgestaltpy
+///
+/// res = webgestaltpy.ora_from_files("kegg.gmt", "gene_list.txt", "reference.txt")
+///
+/// print(res[0:2]) # print first two results
+/// ```
+///
+/// **Output**
+///
+/// ```
+/// [
+///   {
+///     'set': 'hsa00010',
+///     'p': 0.7560574551180973,
+///     'fdr': 1,
+///     'overlap': 2,
+///     'expected': 2.6840874707743088,
+///     'enrichment_ratio': 0.7451321992211519
+///   },
+///   {
+///     'set': 'hsa00020',
+///     'p': 0.7019892669020903,
+///     'fdr': 0.9981116297866582,
+///     'overlap': 1,
+///     'expected': 1.1841562371063128,
+///     'enrichment_ratio': 0.8444831591173054
+///   }
+/// ]
+/// ```
 #[pyfunction]
 fn meta_ora_from_files(
     py: Python,
