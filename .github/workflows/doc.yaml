@@ -35,4 +35,5 @@ jobs:
       - run: python build_docs.py
       - name: Deploy with mike 🚀
         run: |
+          git fetch origin gh-pages
           mike deploy --push dev
