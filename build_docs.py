@@ -1,10 +1,26 @@
 import os
 import webgestaltpy
 
-OUTPUT_DIR = "docs/reference"
+"""
+Auto-generation of the Reference section for the documentation website.
+
+Needs to be run before website is generated. Currently, this script is run automatically in the github action.
+
+Configure the order of the functions by changing the PRIORITY variable in the config section. 
+
+To skip a function or variable, add the variable to SKIP.
+"""
+
+
 ADJUSTED_HEADERS = ["#" * i for i in range(1, 7)]
-print(ADJUSTED_HEADERS)
-PRIORITY = ["webgestaltpy", "ora_from_files", "gsea_from_files"]
+
+######################
+####### CONFIG #######
+######################
+
+OUTPUT_DIR = "docs/reference"
+PRIORITY = ["ora", "meta_ora", "gsea", "meta_gsea"]
+SKIP = ["webgestaltpy"]
 
 
 def sanitize_file_name(name) -> str:
@@ -15,6 +31,8 @@ def sanitize_file_name(name) -> str:
 def process_method(name):
     func = getattr(webgestaltpy, name)
     doc_string = func.__doc__
+    if doc_string is None:
+        return ""
     new_doc_string = ""
     for line in doc_string.split("\n"):
         splits = line.split(" ")
@@ -32,18 +50,20 @@ def process_method(name):
 
 def start():
     all_functions = dir(webgestaltpy)
-    functions = [f for f in all_functions if "__" not in f]
+    functions = [f for f in all_functions if "__" not in f and f not in SKIP]
     new_content = "# Reference\nDocumentation for each function in webgestaltpy.\n\n## Functions\n\n"
     if not os.path.exists(OUTPUT_DIR):
         os.makedirs(OUTPUT_DIR)
     for p in PRIORITY:
         if p in functions:
             path = process_method(p)
-            new_content += f"- [{p}](./{path}.md)\n"
+            if path != "":
+                new_content += f"- [{p}](./{path}.md)\n"
     for f in functions:
         if f not in PRIORITY:
             path = process_method(f)
-            new_content += f"- [{f}](./{path}.md)\n"
+            if path != "":
+                new_content += f"- [{f}](./{path}.md)\n"
     with open(OUTPUT_DIR + "/index.md", "w") as w:
         w.write(new_content)
 

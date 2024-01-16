@@ -78,3 +78,6 @@ docs/_build/
 
 # Pyenv
 .python-version
+
+# Autogen documentation
+docs/reference/*

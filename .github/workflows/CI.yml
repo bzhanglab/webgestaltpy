@@ -155,4 +155,4 @@ jobs:
       - name: Deploy with mike 🚀
         run: |
           git fetch origin gh-pagess
-          mike deploy --push ${{ steps.extract_branch.outputs.branch }} latest
+          mike deploy --update-aliases --push ${{ steps.extract_branch.outputs.branch }} latest
