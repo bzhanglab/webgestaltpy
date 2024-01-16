@@ -23,8 +23,16 @@ WebGestaltPy.meta_ora("kegg.gmt", ["genelist.txt", "second_genelist.txt"],
 
 ## GSEA Example
 
-```python title="ora_test.py"
+```python title="gsea_test.py"
 import WebGestaltPy
 
 WebGestaltPy.gsea("kegg.gmt", "test.rnk")
+```
+
+## Meta-analysis GSEA Example
+
+```python title="meta_gsea_test.py"
+import WebGestaltPy
+
+WebGestaltPy.meta_gsea("kegg.gmt", ["test.rnk", "second_test.rnk"])
 ```
