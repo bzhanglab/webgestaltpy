@@ -8,7 +8,7 @@ import webgestaltpy
 #     )
 # )
 
-y = webgestaltpy.ora("data/ktest.gmt", "data/genelist.txt", "data/reference.txt")
+y = webgestaltpy.ora("data/kegg.gmt", "data/genelist.txt", "data/reference.txt")
 print(y[0:2])
 print(
     "ORA: There are {0} pathways with significant fdr values".format(
@@ -17,7 +17,7 @@ print(
 )
 
 y = webgestaltpy.meta_ora(
-    "data/ktest.gmt",
+    "data/kegg.gmt",
     ["data/genelist.txt", "data/genelist.txt"],
     ["data/reference.txt", "data/reference.txt"],
 )
