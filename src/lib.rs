@@ -2,7 +2,7 @@ use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
 use webgestalt_lib::methods::gsea::{GSEAConfig, GSEAResult};
-use webgestalt_lib::methods::multiomics::{multiomic_gsea, multiomic_ora, GSEAJob, ORAJob};
+use webgestalt_lib::methods::multilist::{multilist_gsea, multilist_ora, GSEAJob, ORAJob};
 use webgestalt_lib::methods::ora::{ORAConfig, ORAResult};
 use webgestalt_lib::readers::utils::Item;
 
@@ -145,11 +145,12 @@ fn meta_gsea(py: Python, gmt: String, rank_files: Vec<String>) -> PyResult<Vec<V
         }
     }
 
-    let rust_result = multiomic_gsea(
+    let rust_result = multilist_gsea(
         jobs,
-        webgestalt_lib::methods::multiomics::MultiOmicsMethod::Meta(
-            webgestalt_lib::methods::multiomics::MetaAnalysisMethod::Stouffer,
+        webgestalt_lib::methods::multilist::MultiListMethod::Meta(
+            webgestalt_lib::methods::multilist::MetaAnalysisMethod::Stouffer,
         ),
+        webgestalt_lib::stat::AdjustmentMethod::BH,
     );
     let mut final_results: Vec<Vec<&PyDict>> = Vec::new();
     for res in rust_result {
@@ -287,11 +288,12 @@ fn meta_ora(
             };
             jobs.push(new_job);
         }
-        let rust_result = multiomic_ora(
+        let rust_result = multilist_ora(
             jobs,
-            webgestalt_lib::methods::multiomics::MultiOmicsMethod::Meta(
-                webgestalt_lib::methods::multiomics::MetaAnalysisMethod::Stouffer,
+            webgestalt_lib::methods::multilist::MultiListMethod::Meta(
+                webgestalt_lib::methods::multilist::MetaAnalysisMethod::Stouffer,
             ),
+            webgestalt_lib::stat::AdjustmentMethod::BH,
         );
         let mut final_results: Vec<Vec<&PyDict>> = Vec::new();
         for res in rust_result {
