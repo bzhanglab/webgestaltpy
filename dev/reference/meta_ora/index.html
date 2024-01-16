@@ -11,14 +11,14 @@
         <link rel="canonical" href="https://bzhanglab.github.io/webgestaltpy/dev/reference/meta_ora/">
       
       
-        <link rel="prev" href="../gsea/">
+        <link rel="prev" href="../meta_gsea/">
       
       
         <link rel="next" href="../ora/">
       
       
       <link rel="icon" href="../../assets/favicon-32x32.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.3">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.4">
     
     
       
@@ -435,6 +435,27 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../meta_gsea/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    meta_gsea
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -549,27 +570,6 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../webgestaltpy/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    webgestaltpy
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
@@ -666,36 +666,19 @@
 <li><code>reference_list_paths</code> - Lists of <code>String</code>s of the paths to reference lists.</li>
 </ul>
 <h2 id="returns">Returns</h2>
-<p>Returns a list of dictionaries with the results containing the ORA results for every set.</p>
+<p>Returns a list of a list of dictionaries with the results containing the ORA results for every set.</p>
+<p>The first list contains the results of the meta-analysis. The following lists are the results for each list individually.</p>
 <h2 id="panics">Panics</h2>
 <p>Panics if the any file is malformed or not at specified path.</p>
 <h2 id="example">Example</h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span> <span class="nn">webgestaltpy</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">res</span> <span class="o">=</span> <span class="n">webgestaltpy</span><span class="o">.</span><span class="n">ora_from_files</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="s2">&quot;gene_list.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;reference.txt&quot;</span><span class="p">)</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span> <span class="c1">## print first two results</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">res</span> <span class="o">=</span> <span class="n">webgestaltpy</span><span class="o">.</span><span class="n">meta_ora</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;gene_list1.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;gene_list2.txt&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;reference.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;reference.txt&quot;</span><span class="p">])</span>
 </span></code></pre></div>
-<p><strong>Output</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  {
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    &#39;set&#39;: &#39;hsa00010&#39;,
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    &#39;p&#39;: 0.7560574551180973,
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    &#39;fdr&#39;: 1,
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    &#39;overlap&#39;: 2,
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    &#39;expected&#39;: 2.6840874707743088,
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    &#39;enrichment_ratio&#39;: 0.7451321992211519
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  },
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  {
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    &#39;set&#39;: &#39;hsa00020&#39;,
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    &#39;p&#39;: 0.7019892669020903,
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    &#39;fdr&#39;: 0.9981116297866582,
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    &#39;overlap&#39;: 1,
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    &#39;expected&#39;: 1.1841562371063128,
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    &#39;enrichment_ratio&#39;: 0.8444831591173054
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  }
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>]
-</span></code></pre></div>
+<p><code>res</code> would be a list containing the results of the meta-analysis and each list run
+individually. In this example, <code>res[0]</code> would look be the results of the meta-analysis.
+<code>res[1]</code> would be the results from <code>gene_list1.txt</code>, <code>res[2]</code> would be the results from <code>gene_list2.txt</code>, and so on.</p>
+<p>See the documentation for <a href="../ora/"><code>webgestaltpy.ora</code></a> for specifics about the format of the results.</p>
 
 
 
@@ -742,10 +725,10 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "content.code.copy"], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "content.code.copy"], "search": "../../assets/javascripts/workers/search.c011b7c0.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      <script src="../../assets/javascripts/bundle.7389ff0e.min.js"></script>
       
     
   </body>

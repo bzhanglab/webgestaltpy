@@ -2,37 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://bzhanglab.github.io/webgestaltpy/dev/</loc>
-         <lastmod>2024-01-12</lastmod>
+         <lastmod>2024-01-16</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bzhanglab.github.io/webgestaltpy/dev/Usage/</loc>
-         <lastmod>2024-01-12</lastmod>
+         <lastmod>2024-01-16</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bzhanglab.github.io/webgestaltpy/dev/reference/</loc>
-         <lastmod>2024-01-12</lastmod>
+         <lastmod>2024-01-16</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bzhanglab.github.io/webgestaltpy/dev/reference/gsea/</loc>
-         <lastmod>2024-01-12</lastmod>
+         <lastmod>2024-01-16</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://bzhanglab.github.io/webgestaltpy/dev/reference/meta_gsea/</loc>
+         <lastmod>2024-01-16</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bzhanglab.github.io/webgestaltpy/dev/reference/meta_ora/</loc>
-         <lastmod>2024-01-12</lastmod>
+         <lastmod>2024-01-16</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://bzhanglab.github.io/webgestaltpy/dev/reference/ora/</loc>
-         <lastmod>2024-01-12</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://bzhanglab.github.io/webgestaltpy/dev/reference/webgestaltpy/</loc>
-         <lastmod>2024-01-12</lastmod>
+         <lastmod>2024-01-16</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
