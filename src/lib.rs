@@ -31,6 +31,11 @@ fn ora_result_to_dict(obj: ORAResult, py: Python) -> Result<&PyDict, PyErr> {
     Ok(dict)
 }
 
+/// Run single-omic NTA (Network-topology analysis) with files at the provided paths
+///
+/// # Parameters
+/// - `net`
+
 /// Run single-omic GSEA with files at provided paths.
 ///
 /// # Parameters
@@ -60,7 +65,7 @@ fn ora_result_to_dict(obj: ORAResult, py: Python) -> Result<&PyDict, PyErr> {
 /// ```
 /// [
 ///   {
-///     'set': 'hsa00010',
+///     'set': 'has00010',
 ///     'p': 0.353,
 ///     'fdr': 1.276048474073356,
 ///     'es': 0.40653028852961814,
@@ -68,7 +73,7 @@ fn ora_result_to_dict(obj: ORAResult, py: Python) -> Result<&PyDict, PyErr> {
 ///     'leading_edge': 24
 ///   },
 ///   {
-///     'set': 'hsa00020',
+///     'set': 'has00020',
 ///     'p': 0,
 ///     'fdr': 0.028834551777982824,
 ///     'es': 0.6216527702210619,
@@ -193,7 +198,7 @@ fn meta_gsea(py: Python, gmt: String, rank_files: Vec<String>) -> PyResult<Vec<V
 /// ```
 /// [
 ///   {
-///     'set': 'hsa00010',
+///     'set': 'has00010',
 ///     'p': 0.7560574551180973,
 ///     'fdr': 1,
 ///     'overlap': 2,
@@ -201,7 +206,7 @@ fn meta_gsea(py: Python, gmt: String, rank_files: Vec<String>) -> PyResult<Vec<V
 ///     'enrichment_ratio': 0.7451321992211519
 ///   },
 ///   {
-///     'set': 'hsa00020',
+///     'set': 'has00020',
 ///     'p': 0.7019892669020903,
 ///     'fdr': 0.9981116297866582,
 ///     'overlap': 1,
