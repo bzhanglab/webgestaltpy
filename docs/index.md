@@ -10,6 +10,6 @@ To install `WebGestaltPy`, run the following in your shell:
 pip install WebGestaltPy
 ```
 
-View [Usage](./Usage/index.md) for examples on how to use the package.
+View [Usage](./usage/index.md) for examples on how to use the package.
 
 Go to [Reference](./reference/index.md) to see the functions available, parameters, and the formats of the outputs.

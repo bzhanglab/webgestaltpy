@@ -31,8 +31,10 @@ jobs:
       - uses: PyO3/maturin-action@v1
         with:
           command: build
-      - run: pip install .
-      - run: python build_docs.py
+      - name: Install package
+        run: pip install .
+      - name: Build documentation
+        run: python build_docs.py
       - name: Deploy with mike 🚀
         run: |
           git fetch origin gh-pages

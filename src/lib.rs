@@ -3,8 +3,15 @@ use pyo3::prelude::*;
 use pyo3::types::PyDict;
 use webgestalt_lib::methods::gsea::{GSEAConfig, GSEAResult};
 use webgestalt_lib::methods::multilist::{multilist_gsea, multilist_ora, GSEAJob, ORAJob};
+use webgestalt_lib::methods::nta::{NTAConfig, NTAResult};
 use webgestalt_lib::methods::ora::{ORAConfig, ORAResult};
 use webgestalt_lib::readers::utils::Item;
+
+#[pyclass]
+pub enum NTAMethod {
+    Prioritization,
+    Expansion,
+}
 
 fn gsea_result_to_dict(obj: GSEAResult, py: Python) -> Result<&PyDict, PyErr> {
     let dict = PyDict::new(py);
@@ -31,16 +38,47 @@ fn ora_result_to_dict(obj: ORAResult, py: Python) -> Result<&PyDict, PyErr> {
     Ok(dict)
 }
 
+fn nta_result_to_dict(obj: NTAResult, py: Python) -> Result<&PyDict, PyErr> {
+    let dict = PyDict::new(py);
+    dict.set_item("candidates".to_object(py), obj.candidates.to_object(py))?;
+    dict.set_item("scores".to_object(py), obj.scores.to_object(py))?;
+    dict.set_item("neighborhood".to_object(py), obj.neighborhood.to_object(py))?;
+    Ok(dict)
+}
+
 /// Run single-omic NTA (Network-topology analysis) with files at the provided paths
 ///
 /// # Parameters
-/// - `net`
+/// - `net` - `String` of the path to the net file of interest
+/// - `rank` - `String` of the path to the rank file of interest
+#[pyfunction]
+fn nta<'a>(
+    py: Python<'a>,
+    edge_list_path: String,
+    analyte_list_path: String,
+    nta_method: &'a NTAMethod,
+) -> PyResult<&'a PyDict> {
+    let net_file = webgestalt_lib::readers::read_edge_list(edge_list_path);
+    let analytes = webgestalt_lib::readers::read_single_list(analyte_list_path);
+    let method = match nta_method {
+        NTAMethod::Expansion => webgestalt_lib::methods::nta::NTAMethod::Expand(10),
+        NTAMethod::Prioritization => webgestalt_lib::methods::nta::NTAMethod::Prioritize(10),
+    };
+    let res = webgestalt_lib::methods::nta::get_nta(NTAConfig {
+        edge_list: net_file,
+        seeds: analytes.into_iter().collect(),
+        method: Option::Some(method),
+        ..Default::default()
+    });
+    let new_res = nta_result_to_dict(res, py)?;
+    Ok(new_res)
+}
 
 /// Run single-omic GSEA with files at provided paths.
 ///
 /// # Parameters
-/// - `gmt` - `String` of the path to the gmt file of interest
-/// - `rank` - `String` of the path to the rank file of interest. Tab separated.
+/// - `gmt_path` - `String` of the path to the gmt file of interest
+/// - `rank_file_path` - `String` of the path to the rank file of interest. Tab separated.
 ///
 /// # Returns
 ///
@@ -83,9 +121,9 @@ fn ora_result_to_dict(obj: ORAResult, py: Python) -> Result<&PyDict, PyErr> {
 /// ]
 /// ```
 #[pyfunction]
-fn gsea(py: Python, gmt: String, rank_file: String) -> PyResult<Vec<&PyDict>> {
-    let analyte_list = webgestalt_lib::readers::read_rank_file(rank_file);
-    let gmt = webgestalt_lib::readers::read_gmt_file(gmt);
+fn gsea(py: Python, gmt_path: String, rank_file_path: String) -> PyResult<Vec<&PyDict>> {
+    let analyte_list = webgestalt_lib::readers::read_rank_file(rank_file_path);
+    let gmt = webgestalt_lib::readers::read_gmt_file(gmt_path);
     let res: Vec<GSEAResult> = webgestalt_lib::methods::gsea::gsea(
         analyte_list.unwrap(),
         gmt.unwrap(),
@@ -319,5 +357,7 @@ fn webgestaltpy(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(ora, m)?)?;
     m.add_function(wrap_pyfunction!(meta_gsea, m)?)?;
     m.add_function(wrap_pyfunction!(meta_ora, m)?)?;
+    m.add_class::<NTAMethod>()?;
+    m.add_function(wrap_pyfunction!(nta, m)?)?;
     Ok(())
 }

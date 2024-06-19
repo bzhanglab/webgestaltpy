@@ -19,7 +19,7 @@ ADJUSTED_HEADERS = ["#" * i for i in range(1, 7)]
 ######################
 
 OUTPUT_DIR = "docs/reference"
-PRIORITY = ["ora", "meta_ora", "gsea", "meta_gsea"]
+PRIORITY = ["ora", "meta_ora", "gsea", "meta_gsea", "nta"]
 SKIP = ["webgestaltpy"]
 
 
