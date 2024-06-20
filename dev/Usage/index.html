@@ -410,6 +410,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#nta-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      NTA Example
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -680,6 +689,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#nta-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      NTA Example
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -703,23 +721,28 @@
 <h2 id="ora-example">ORA Example</h2>
 <div class="language-python highlight"><span class="filename">ora_test.py</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span> <span class="nn">WebGestaltPy</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">WebGestaltPy</span><span class="o">.</span><span class="n">ora</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="s2">&quot;genelist.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;reference.txt&quot;</span><span class="p">)</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">res</span> <span class="o">=</span> <span class="n">WebGestaltPy</span><span class="o">.</span><span class="n">ora</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="s2">&quot;genelist.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;reference.txt&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="meta-analysis-ora-example">Meta-analysis ORA Example</h2>
 <div class="language-python highlight"><span class="filename">meta_ora_test.py</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span> <span class="nn">WebGestaltPy</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">WebGestaltPy</span><span class="o">.</span><span class="n">meta_ora</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;genelist.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;second_genelist.txt&quot;</span><span class="p">],</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">res</span> <span class="o">=</span> <span class="n">WebGestaltPy</span><span class="o">.</span><span class="n">meta_ora</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;genelist.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;second_genelist.txt&quot;</span><span class="p">],</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>                      <span class="p">[</span><span class="s2">&quot;reference.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;reference.txt&quot;</span><span class="p">])</span>
 </span></code></pre></div>
 <h2 id="gsea-example">GSEA Example</h2>
 <div class="language-python highlight"><span class="filename">gsea_test.py</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span> <span class="nn">WebGestaltPy</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">WebGestaltPy</span><span class="o">.</span><span class="n">gsea</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="s2">&quot;test.rnk&quot;</span><span class="p">)</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">res</span> <span class="o">=</span> <span class="n">WebGestaltPy</span><span class="o">.</span><span class="n">gsea</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="s2">&quot;test.rnk&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="meta-analysis-gsea-example">Meta-analysis GSEA Example</h2>
 <div class="language-python highlight"><span class="filename">meta_gsea_test.py</span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span> <span class="nn">WebGestaltPy</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">WebGestaltPy</span><span class="o">.</span><span class="n">meta_gsea</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;test.rnk&quot;</span><span class="p">,</span> <span class="s2">&quot;second_test.rnk&quot;</span><span class="p">])</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">res</span> <span class="o">=</span> <span class="n">WebGestaltPy</span><span class="o">.</span><span class="n">meta_gsea</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;test.rnk&quot;</span><span class="p">,</span> <span class="s2">&quot;second_test.rnk&quot;</span><span class="p">])</span>
+</span></code></pre></div>
+<h2 id="nta-example">NTA Example</h2>
+<div class="language-python highlight"><span class="filename">nta_test.py</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span> <span class="nn">WebGestaltPy</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">nta_method</span> <span class="o">=</span> <span class="n">webgestaltpy</span><span class="o">.</span><span class="n">NTAMethod</span><span class="o">.</span><span class="n">Prioritization</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">res</span> <span class="o">=</span> <span class="n">webgestaltpy</span><span class="o">.</span><span class="n">nta</span><span class="p">(</span><span class="s2">&quot;data/hsapiens_network_CPTAC_Proteomics_OV_entrezgene.net&quot;</span><span class="p">,</span> <span class="s2">&quot;data/net_genes.txt&quot;</span><span class="p">,</span> <span class="n">nta_method</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 </span></code></pre></div>
 
 
