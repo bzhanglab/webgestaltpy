@@ -618,9 +618,9 @@ checksum = "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423"
 
 [[package]]
 name = "webgestalt_lib"
-version = "0.3.0"
+version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4cfd93a9a4dd3bb6b9bf81cd2f2f8520917483330c05b6c4e773f301c1a312ce"
+checksum = "0af63e3cbb1532cdfa4002ca11c961840c6dbeee6120911d55dcc165df0b3dbe"
 dependencies = [
  "ahash",
  "csv",
@@ -634,7 +634,7 @@ dependencies = [
 
 [[package]]
 name = "webgestaltpy"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "pyo3",
  "rustc-hash",

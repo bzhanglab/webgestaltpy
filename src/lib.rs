@@ -7,9 +7,25 @@ use webgestalt_lib::methods::nta::{NTAConfig, NTAResult};
 use webgestalt_lib::methods::ora::{ORAConfig, ORAResult};
 use webgestalt_lib::readers::utils::Item;
 
+/// Enum of the NTA Methods supported by WebGestalt
+///
+/// # Enum Values
+///
+/// - `Prioritization` - Finds the N seeds (input analytes) that are most likely to be encountered with a random walk
+/// - `Expansion` - Finds the N non-seed (non-input analytes) nodes that are most likely to be encountered with a random walk
+///
+/// # Example
+///
+/// ```python
+/// import webgestaltpy
+///  
+/// method = webgestaltpy.NTAMethod.Expansion
+/// ```
 #[pyclass]
 pub enum NTAMethod {
+    /// Finds the N seeds (input analytes) that are most likely to be encountered with a random walk
     Prioritization,
+    /// Finds the N non-seed (non-input analytes) nodes that are most likely to be encountered with a random walk
     Expansion,
 }
 
@@ -49,20 +65,68 @@ fn nta_result_to_dict(obj: NTAResult, py: Python) -> Result<&PyDict, PyErr> {
 /// Run single-omic NTA (Network-topology analysis) with files at the provided paths
 ///
 /// # Parameters
-/// - `net` - `String` of the path to the net file of interest
-/// - `rank` - `String` of the path to the rank file of interest
+/// - `edge_list_path` - `String` of the path to the edge list file of the network. See below for details.
+/// - `analyte_list_path` - `String` of the path to the rank file of interest, with analytes separated by new lines
+/// - `nta_method` - a `NTAMethod` object specifying the NTA method for the analysis.
+/// - `n` - the number of seeds or nodes to identify according to `nta_method`
+///
+/// /// # Returns
+///
+/// Returns a dictionary object containing the `candidates` (seed nodes when using prioritization), `scores` (random-walk probabilities), and `neighborhood` (identified nodes)
+///
+/// # Panics
+///
+/// Panics if the network or the analyte file is malformed or not at specified path. Will also panic if `nta_method` is not specified correctly
+///
+/// # Example
+///
+/// ```python
+/// import webgestaltpy
+///
+/// nta_method = webgestaltpy.NTAMethod.Prioritization
+/// y = webgestaltpy.nta("data/hsapiens_network_CPTAC_Proteomics_OV_entrezgene.net", "data/net_genes.txt", nta_method, 5)
+/// print(y)
+/// ```
+///
+/// **Output**
+///
+/// ```
+/// {
+///     'candidates': [
+///       'ACTA1',
+///       'ACTA2',
+///       'ACTB',
+///       'ACTG1'
+///     ],
+///     'scores': [
+///       0.015611545101449542,
+///       0.015611545101449542,
+///       0.015227515228472441,
+///      0.015227515228472441,
+///       0.015105514420304793
+///     ],
+///     'neighborhood': [
+///       'ACTA1',
+///       'ACTA2',
+///       'ACTB',
+///       'ACTG1',
+///       'ACTG2'
+///     ]
+///   }
+/// ```
 #[pyfunction]
 fn nta<'a>(
     py: Python<'a>,
     edge_list_path: String,
     analyte_list_path: String,
     nta_method: &'a NTAMethod,
+    n: usize,
 ) -> PyResult<&'a PyDict> {
     let net_file = webgestalt_lib::readers::read_edge_list(edge_list_path);
     let analytes = webgestalt_lib::readers::read_single_list(analyte_list_path);
     let method = match nta_method {
-        NTAMethod::Expansion => webgestalt_lib::methods::nta::NTAMethod::Expand(10),
-        NTAMethod::Prioritization => webgestalt_lib::methods::nta::NTAMethod::Prioritize(10),
+        NTAMethod::Expansion => webgestalt_lib::methods::nta::NTAMethod::Expand(n),
+        NTAMethod::Prioritization => webgestalt_lib::methods::nta::NTAMethod::Prioritize(n),
     };
     let res = webgestalt_lib::methods::nta::get_nta(NTAConfig {
         edge_list: net_file,

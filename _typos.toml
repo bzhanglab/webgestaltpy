@@ -1,2 +1,2 @@
 [files]
-extend-exclude = ["*.gmt"]
+extend-exclude = ["data/*"]
