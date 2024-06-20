@@ -1,6 +1,6 @@
 # WebGestaltPy
 
-`WebGestaltPy` is a Python package to perform over-representation analysis(ORA) and gene-set enrichment analysis(GSEA). Unlike the R package ([WebGestaltR](https://www.github.com/bzhanglab/WebGestaltR)), this package will only perform the computation. If you would like to have your results automatically visualized, please use the R package, or visit [webgestalt.org](https://www.webgestalt.org/).
+`WebGestaltPy` is a Python package to perform over-representation analysis(ORA), gene-set enrichment analysis(GSEA), and network-topology based analysis (NTA). Unlike the R package ([WebGestaltR](https://www.github.com/bzhanglab/WebGestaltR)), this package will only perform the computation. If you would like to have your results automatically visualized, please use the R package, or visit [webgestalt.org](https://www.webgestalt.org/).
 
 ## Installation
 

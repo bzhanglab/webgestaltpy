@@ -62,7 +62,7 @@ fn nta_result_to_dict(obj: NTAResult, py: Python) -> Result<&PyDict, PyErr> {
     Ok(dict)
 }
 
-/// Run single-omic NTA (Network-topology analysis) with files at the provided paths
+/// Run single-omic NTA (Network-topology based analysis) with files at the provided paths
 ///
 /// # Parameters
 /// - `edge_list_path` - `String` of the path to the edge list file of the network. See below for details.
@@ -70,7 +70,7 @@ fn nta_result_to_dict(obj: NTAResult, py: Python) -> Result<&PyDict, PyErr> {
 /// - `nta_method` - a `NTAMethod` object specifying the NTA method for the analysis.
 /// - `n` - the number of seeds or nodes to identify according to `nta_method`
 ///
-/// /// # Returns
+/// # Returns
 ///
 /// Returns a dictionary object containing the `candidates` (seed nodes when using prioritization), `scores` (random-walk probabilities), and `neighborhood` (identified nodes)
 ///
@@ -92,27 +92,27 @@ fn nta_result_to_dict(obj: NTAResult, py: Python) -> Result<&PyDict, PyErr> {
 ///
 /// ```
 /// {
-///     'candidates': [
-///       'ACTA1',
-///       'ACTA2',
-///       'ACTB',
-///       'ACTG1'
-///     ],
-///     'scores': [
-///       0.015611545101449542,
-///       0.015611545101449542,
-///       0.015227515228472441,
-///      0.015227515228472441,
-///       0.015105514420304793
-///     ],
-///     'neighborhood': [
-///       'ACTA1',
-///       'ACTA2',
-///       'ACTB',
-///       'ACTG1',
-///       'ACTG2'
-///     ]
-///   }
+///   'candidates': [
+///     'ACTA1',
+///     'ACTA2',
+///     'ACTB',
+///     'ACTG1'
+///   ],
+///   'scores': [
+///     0.015611545101449542,
+///     0.015611545101449542,
+///     0.015227515228472441,
+///     0.015227515228472441,
+///     0.015105514420304793
+///   ],
+///   'neighborhood': [
+///     'ACTA1',
+///     'ACTA2',
+///     'ACTB',
+///     'ACTG1',
+///     'ACTG2'
+///   ]
+/// }
 /// ```
 #[pyfunction]
 fn nta<'a>(
