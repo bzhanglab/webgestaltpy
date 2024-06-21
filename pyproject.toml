@@ -14,9 +14,9 @@ build-backend = "maturin"
 [tool]
 rye = { dev-dependencies = [
     "pandas>=1.1.5",
-    "mkdocs-material>=9.2.8",
+    "mkdocs-material>=9.5.27",
     "maturin>=1.4.0",
-    "mike>=2.0.0",
+    "mike>=2.1.1",
     "pre-commit>=3.5.0",
 ] }
 
