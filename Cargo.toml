@@ -1,6 +1,6 @@
 [package]
 name = "webgestaltpy"
-version = "0.3.1"
+version = "0.3.2"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -11,4 +11,4 @@ crate-type = ["cdylib"]
 [dependencies]
 pyo3 = "0.20.2"
 rustc-hash = "1.1.0"
-webgestalt_lib = "0.3.1"
+webgestalt_lib = "0.3.2"
