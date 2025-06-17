@@ -1,3 +1,4 @@
+use ahash::AHashSet;
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
@@ -201,6 +202,7 @@ fn gsea(py: Python, gmt_path: String, rank_file_path: String) -> PyResult<Vec<&P
     Ok(new_res)
 }
 
+
 /// Run a meta-analysis GSEA with files at the provided paths.
 ///
 /// # Parameters
@@ -290,7 +292,72 @@ fn meta_gsea(py: Python, gmt: String, rank_files: Vec<String>) -> PyResult<Vec<V
 /// ```python
 /// import webgestaltpy
 ///
-/// res = webgestaltpy.ora("kegg.gmt", "gene_list.txt", "reference.txt")
+/// res = webgestaltpy.ora_from_files("kegg.gmt", "gene_list.txt", "reference.txt")
+///
+/// print(res[0:2]) # print first two results
+/// ```
+///
+/// **Output**
+///
+/// ```
+/// [
+///   {
+///     'set': 'has00010',
+///     'p': 0.7560574551180973,
+///     'fdr': 1,
+///     'overlap': 2,
+///     'expected': 2.6840874707743088,
+///     'enrichment_ratio': 0.7451321992211519
+///   },
+///   {
+///     'set': 'has00020',
+///     'p': 0.7019892669020903,
+///     'fdr': 0.9981116297866582,
+///     'overlap': 1,
+///     'expected': 1.1841562371063128,
+///     'enrichment_ratio': 0.8444831591173054
+///   }
+/// ]
+/// ```
+#[pyfunction]
+fn ora_from_files(
+    py: Python,
+    gmt_path: String,
+    analyte_list_path: String,
+    reference_list_path: String,
+) -> PyResult<Vec<&PyDict>> {
+    let (gmt, analyte_list, reference) =
+        webgestalt_lib::readers::read_ora_files(gmt_path, analyte_list_path, reference_list_path);
+    let res: Vec<ORAResult> =
+        webgestalt_lib::methods::ora::get_ora(&analyte_list, &reference, gmt, ORAConfig::default());
+    let new_res: Vec<&PyDict> = res
+        .into_iter()
+        .map(|x| ora_result_to_dict(x, py).unwrap())
+        .collect();
+    Ok(new_res)
+}
+
+/// Run a single-omic ORA with gmt file and list of analytes and reference provided as strings.
+///
+/// # Parameters
+/// - `gmt_path` - `String` of the path to the gmt file of interest
+/// - `analyte_list_path` - `String` of the path to the analyte file of interest.
+/// - `reference_list_path`
+///
+/// # Returns
+///
+/// Returns a list of dictionaries with the results containing the ORA results for every set.
+///
+/// # Panics
+///
+/// Panics if the any file is malformed or not at specified path.
+///
+/// # Example
+///
+/// ```python
+/// import webgestaltpy
+///
+/// res = webgestaltpy.ora("kegg.gmt", gene_list, reference)
 ///
 /// print(res[0:2]) # print first two results
 /// ```
@@ -321,11 +388,12 @@ fn meta_gsea(py: Python, gmt: String, rank_files: Vec<String>) -> PyResult<Vec<V
 fn ora(
     py: Python,
     gmt_path: String,
-    analyte_list_path: String,
-    reference_list_path: String,
+    analyte_list: Vec<String>,
+    reference_list: Vec<String>,
 ) -> PyResult<Vec<&PyDict>> {
-    let (gmt, analyte_list, reference) =
-        webgestalt_lib::readers::read_ora_files(gmt_path, analyte_list_path, reference_list_path);
+    let gmt = webgestalt_lib::readers::read_gmt_file(gmt_path).unwrap();
+    let reference: AHashSet<String> = reference_list.into_iter().collect();
+    let analyte_list: AHashSet<String> = analyte_list.into_iter().collect();
     let res: Vec<ORAResult> =
         webgestalt_lib::methods::ora::get_ora(&analyte_list, &reference, gmt, ORAConfig::default());
     let new_res: Vec<&PyDict> = res
@@ -418,6 +486,7 @@ fn meta_ora(
 #[pymodule]
 fn webgestaltpy(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(gsea, m)?)?;
+    m.add_function(wrap_pyfunction!(ora_from_files, m)?)?;
     m.add_function(wrap_pyfunction!(ora, m)?)?;
     m.add_function(wrap_pyfunction!(meta_gsea, m)?)?;
     m.add_function(wrap_pyfunction!(meta_ora, m)?)?;
