@@ -210,11 +210,7 @@ jobs:
           command: build
       - run: pip install .
       - run: python build_docs.py
-      - name: Extract branch name
-        shell: bash
-        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-        id: extract_branch
       - name: Deploy with mike 🚀
         run: |
           git fetch origin gh-pages
-          mike deploy --update-aliases --push ${{ env.tag_name }} latest
+          mike deploy --update-aliases --push ${{ github.ref_name }} latest
