@@ -161,7 +161,7 @@ mod webgestaltpy {
     ///
     /// # Panics
     ///
-    /// Panics if the network or the analyte file is malformed or not at specified path. Will also panic if `nta_method` is not specified correctly
+    /// Panics if the network or the analyte list is malformed or not at specified path. Will also panic if `nta_method` is not specified correctly
     ///
     /// # Example
     ///
@@ -257,12 +257,14 @@ mod webgestaltpy {
     /// ```python
     /// import webgestaltpy
     ///
-    /// res = webgestaltpy.gsea_from_files("kegg.gmt", "example_ranked_list.rnk")
+    /// res = webgestaltpy.gsea_from_files("kegg.gmt", "test.rnk")
     ///
     /// print(res[0:2]) # print first two results
     /// ```
     ///
     /// **Output**
+    ///
+    /// _Your results may vary depending on random permutations_
     ///
     /// ```
     /// [
@@ -309,7 +311,7 @@ mod webgestaltpy {
     ///
     /// # Parameters
     /// - `gmt_path` - `String` of the path to the gmt file of interest
-    /// - `rank_list` - `list[tuple[str, float]]` of the path to the rank file of interest. Tab separated.
+    /// - `rank_list` - `list[tuple[str, float]]` the rank list of interest.
     ///
     /// # Returns
     ///
@@ -317,7 +319,7 @@ mod webgestaltpy {
     ///
     /// # Panics
     ///
-    /// Panics if the GMT or the rank file is malformed or not at specified path.
+    /// Panics if the GMT or the rank list is malformed or not at specified path.
     ///
     /// # Example
     ///
@@ -342,7 +344,7 @@ mod webgestaltpy {
     ///             res.append((vals[0], float(vals[1])))
     ///     return res
     ///
-    /// res = webgestaltpy.gsea("kegg.gmt", create_rank_list("example_ranked_list.rnk"))
+    /// res = webgestaltpy.gsea("kegg.gmt", create_rank_list("test.rnk"))
     ///
     /// print(res[0:2]) # print first two results
     /// ```
@@ -419,12 +421,12 @@ mod webgestaltpy {
     /// ```python
     /// import webgestaltpy
     ///
-    /// res = webgestaltpy.meta_gsea_from_files("kegg.gmt", ["rank_list1.txt", "rank_list2.txt"])
+    /// res = webgestaltpy.meta_gsea_from_files("kegg.gmt", ["test.rnk", "second_test.rnk"])
     /// ```
     ///
     /// `res` would be a list containing the results of the meta-analysis and each list run
     /// individually. In this example, `res[0]` would look be the results of the meta-analysis.
-    /// `res[1]` would be the results from `rank_list1.txt`, `res[2]` would be the results from `rank_list2.txt`, and so on.
+    /// `res[1]` would be the results from `test.rnk`, `res[2]` would be the results from `second_test.rnk`, and so on.
     ///
     /// See the documentation for [`webgestaltpy.gsea`](./gsea.md) for specifics about the format of the results.
     #[pyfunction]
@@ -471,7 +473,7 @@ mod webgestaltpy {
         Ok(final_results)
     }
 
-    /// Run a meta-analysis GSEA with provided rank files.
+    /// Run a meta-analysis GSEA with provided rank objects.
     ///
     /// # Parameters
     /// - `gmt_path` - `String` of the path to the gmt file of interest
@@ -485,7 +487,7 @@ mod webgestaltpy {
     ///
     /// # Panics
     ///
-    /// Panics if the any file is malformed or not at specified path.
+    /// Panics if the any file or list is malformed or not at specified path.
     ///
     /// # Example
     ///
@@ -509,12 +511,12 @@ mod webgestaltpy {
     ///             vals = line.split("\t")
     ///             res.append((vals[0], float(vals[1])))
     ///     return re/
-    /// res = webgestaltpy.meta_gsea("kegg.gmt", [create_rank_list("rank_list1.txt"), create_rank_list("rank_list2.txt")])
+    /// res = webgestaltpy.meta_gsea("kegg.gmt", [create_rank_list("test.rnk"), create_rank_list("second_test.rnk")])
     /// ```
     ///
     /// `res` would be a list containing the results of the meta-analysis and each list run
     /// individually. In this example, `res[0]` would look be the results of the meta-analysis.
-    /// `res[1]` would be the results from `rank_list1.txt`, `res[2]` would be the results from `rank_list2.txt`, and so on.
+    /// `res[1]` would be the results from `test.rnk`, `res[2]` would be the results from `second_test.rnk`, and so on.
     ///
     /// See the documentation for [`webgestaltpy.gsea`](./gsea.md) for specifics about the format of the results.
     #[pyfunction]
@@ -564,7 +566,7 @@ mod webgestaltpy {
     /// # Parameters
     /// - `gmt_path` - `String` of the path to the gmt file of interest
     /// - `analyte_list_path` - `String` of the path to the analyte file of interest.
-    /// - `reference_list_path`
+    /// - `reference_list_path` - `String` of the path to the reference list file. Usually all observed analytes.
     ///
     /// # Returns
     ///
@@ -579,7 +581,7 @@ mod webgestaltpy {
     /// ```python
     /// import webgestaltpy
     ///
-    /// res = webgestaltpy.ora_from_files("kegg.gmt", "gene_list.txt", "reference.txt")
+    /// res = webgestaltpy.ora_from_files("kegg.gmt", "genelist.txt", "reference.txt")
     ///
     /// print(res[0:2]) # print first two results
     /// ```
@@ -631,12 +633,12 @@ mod webgestaltpy {
         Ok(new_res)
     }
 
-    /// Run a single-omic ORA with gmt file and list of analytes and reference provided as strings.
+    /// Run a single-omic ORA with gmt file and list of analytes and reference provided as list of strings.
     ///
     /// # Parameters
-    /// - `gmt_path` - `String` of the path to the gmt file of interest
-    /// - `analyte_list_path` - `String` of the path to the analyte file of interest.
-    /// - `reference_list_path`
+    /// - `gmt_path` - `str` of the path to the gmt file of interest
+    /// - `analyte_list` - `list[str]` of the analyte list of interest.
+    /// - `reference_list` - `list[str]` of the reference list. Typically all observed analytes.
     ///
     /// # Returns
     ///
@@ -644,12 +646,20 @@ mod webgestaltpy {
     ///
     /// # Panics
     ///
-    /// Panics if the any file is malformed or not at specified path.
+    /// Panics if the any file or list is malformed or not at specified path.
     ///
     /// # Example
     ///
     /// ```python
     /// import webgestaltpy
+    ///
+    /// def file_to_list(file_path: str) -> list[str]:
+    ///     """Convert file to list[str]"""
+    ///     with open(file_path, "r") as r:
+    ///         return list(r.readlines()
+    ///
+    /// gene_list = file_to_list("genelist.txt")
+    /// reference = file_to_list("reference.txt")
     ///
     /// res = webgestaltpy.ora("kegg.gmt", gene_list, reference) # gene_list and reference are both list[str]
     ///
@@ -701,12 +711,12 @@ mod webgestaltpy {
         Ok(new_res)
     }
 
-    /// Run a meta-analysis ORA with files at the provided paths.
+    /// Run a meta-analysis ORA with analyte lists and reference lists given as python objects.
     ///
     /// # Parameters
     /// - `gmt_path` - `String` of the path to the gmt file of interest
-    /// - `analyte_list_paths` -  Lists of `String`s of the path to the analyte files of interest.
-    /// - `reference_list_paths` - Lists of `String`s of the paths to reference lists.
+    /// - `analyte_lists` -  Lists of list[str] which are the analyte lists of interests
+    /// - `reference_lists` - Lists of list[str] which are the reference list for each corresponding analyte list
     ///
     /// # Returns
     ///
@@ -716,7 +726,7 @@ mod webgestaltpy {
     ///
     /// # Panics
     ///
-    /// Panics if the any file is malformed or not at specified path.
+    /// Panics if the any list or file is malformed or not at specified path.
     ///
     /// # Example
     ///
@@ -730,14 +740,14 @@ mod webgestaltpy {
     ///
     /// res = webgestaltpy.meta_ora(
     ///     "kegg.gmt",
-    ///     [file_to_list("gene_list1.txt"), file_to_list("gene_list2.txt")],
+    ///     [file_to_list("genelist.txt"), file_to_list("second_genelist.txt")],
     ///     [file_to_list("reference.txt"), file_to_list("reference.txt")],
     /// )
     /// ```
     ///
     /// `res` would be a list containing the results of the meta-analysis and each list run
     /// individually. In this example, `res[0]` would look be the results of the meta-analysis.
-    /// `res[1]` would be the results from `gene_list1.txt`, `res[2]` would be the results from `gene_list2.txt`, and so on.
+    /// `res[1]` would be the results from `genelist.txt`, `res[2]` would be the results from `second_genelist.txt`, and so on.
     ///
     /// See the documentation for [`webgestaltpy.ora`](./ora.md) for specifics about the format of the results.
     #[pyfunction]
@@ -810,12 +820,12 @@ mod webgestaltpy {
     /// ```python
     /// import webgestaltpy
     ///
-    /// res = webgestaltpy.meta_ora_from_files("kegg.gmt", ["gene_list1.txt", "gene_list2.txt"], ["reference.txt", "reference.txt"])
+    /// res = webgestaltpy.meta_ora_from_files("kegg.gmt", ["genelist.txt", "second_genelist.txt"], ["reference.txt", "reference.txt"])
     /// ```
     ///
     /// `res` would be a list containing the results of the meta-analysis and each list run
     /// individually. In this example, `res[0]` would look be the results of the meta-analysis.
-    /// `res[1]` would be the results from `gene_list1.txt`, `res[2]` would be the results from `gene_list2.txt`, and so on.
+    /// `res[1]` would be the results from `genelist.txt`, `res[2]` would be the results from `second_genelist.txt`, and so on.
     ///
     /// See the documentation for [`webgestaltpy.ora`](./ora.md) for specifics about the format of the results.
     #[pyfunction]
