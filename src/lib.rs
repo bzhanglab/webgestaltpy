@@ -19,7 +19,7 @@ use webgestalt_lib::readers::utils::Item;
 ///
 /// ```python
 /// import webgestaltpy
-///  
+///
 /// method = webgestaltpy.NTAMethod.Expansion
 /// ```
 #[pyclass]
@@ -30,7 +30,7 @@ pub enum NTAMethod {
     Expansion,
 }
 
-fn gsea_result_to_dict(obj: GSEAResult, py: Python) -> Result<&PyDict, PyErr> {
+fn gsea_result_to_dict<'a>(obj: GSEAResult, py: Python<'a>) -> Result<&'a PyDict, PyErr> {
     let dict = PyDict::new(py);
     dict.set_item("set".to_object(py), obj.set.to_object(py))?;
     dict.set_item("p".to_object(py), obj.p.to_object(py))?;
@@ -41,7 +41,7 @@ fn gsea_result_to_dict(obj: GSEAResult, py: Python) -> Result<&PyDict, PyErr> {
     Ok(dict)
 }
 
-fn ora_result_to_dict(obj: ORAResult, py: Python) -> Result<&PyDict, PyErr> {
+fn ora_result_to_dict<'a>(obj: ORAResult, py: Python<'a>) -> Result<&'a PyDict, PyErr> {
     let dict = PyDict::new(py);
     dict.set_item("set".to_object(py), obj.set.to_object(py))?;
     dict.set_item("p".to_object(py), obj.p.to_object(py))?;
@@ -55,7 +55,7 @@ fn ora_result_to_dict(obj: ORAResult, py: Python) -> Result<&PyDict, PyErr> {
     Ok(dict)
 }
 
-fn nta_result_to_dict(obj: NTAResult, py: Python) -> Result<&PyDict, PyErr> {
+fn nta_result_to_dict<'a>(obj: NTAResult, py: Python<'a>) -> Result<&'a PyDict, PyErr> {
     let dict = PyDict::new(py);
     dict.set_item("candidates".to_object(py), obj.candidates.to_object(py))?;
     dict.set_item("scores".to_object(py), obj.scores.to_object(py))?;
@@ -186,7 +186,11 @@ fn nta<'a>(
 /// ]
 /// ```
 #[pyfunction]
-fn gsea_from_files(py: Python, gmt_path: String, rank_file_path: String) -> PyResult<Vec<&PyDict>> {
+fn gsea_from_files<'a>(
+    py: Python<'a>,
+    gmt_path: String,
+    rank_file_path: String,
+) -> PyResult<Vec<&'a PyDict>> {
     let analyte_list = webgestalt_lib::readers::read_rank_file(rank_file_path);
     let gmt = webgestalt_lib::readers::read_gmt_file(gmt_path);
     let res: Vec<GSEAResult> = webgestalt_lib::methods::gsea::gsea(
@@ -247,8 +251,8 @@ fn gsea_from_files(py: Python, gmt_path: String, rank_file_path: String) -> PyRe
 /// **Output**
 ///
 /// _Your results may vary depending on random permutations_
-///  
-/// ```
+///
+/// ```python
 /// [
 ///   {
 ///     'set': 'has00010',
@@ -269,7 +273,11 @@ fn gsea_from_files(py: Python, gmt_path: String, rank_file_path: String) -> PyRe
 /// ]
 /// ```
 #[pyfunction]
-fn gsea(py: Python, gmt_path: String, rank_file: Vec<(String, f64)>) -> PyResult<Vec<&PyDict>> {
+fn gsea<'a>(
+    py: Python<'a>,
+    gmt_path: String,
+    rank_file: Vec<(String, f64)>,
+) -> PyResult<Vec<&'a PyDict>> {
     let analyte_list = rank_file
         .iter()
         .map(|(analyte, value)| RankListItem {
@@ -321,7 +329,11 @@ fn gsea(py: Python, gmt_path: String, rank_file: Vec<(String, f64)>) -> PyResult
 ///
 /// See the documentation for [`webgestaltpy.gsea`](./gsea.md) for specifics about the format of the results.
 #[pyfunction]
-fn meta_gsea(py: Python, gmt: String, rank_files: Vec<String>) -> PyResult<Vec<Vec<&PyDict>>> {
+fn meta_gsea_from_files<'a>(
+    py: Python<'a>,
+    gmt: String,
+    rank_files: Vec<String>,
+) -> PyResult<Vec<Vec<&'a PyDict>>> {
     let mut jobs: Vec<GSEAJob> = Vec::new();
     let gmt_vec: Vec<Item> = webgestalt_lib::readers::read_gmt_file(gmt).unwrap();
     for rank_file in rank_files {
@@ -340,6 +352,77 @@ fn meta_gsea(py: Python, gmt: String, rank_files: Vec<String>) -> PyResult<Vec<V
                 rank_file
             )));
         }
+    }
+
+    let rust_result = multilist_gsea(
+        jobs,
+        webgestalt_lib::methods::multilist::MultiListMethod::Meta(
+            webgestalt_lib::methods::multilist::MetaAnalysisMethod::Stouffer,
+        ),
+        webgestalt_lib::stat::AdjustmentMethod::BH,
+    );
+    let mut final_results: Vec<Vec<&PyDict>> = Vec::new();
+    for res in rust_result {
+        let converted = res
+            .into_iter()
+            .map(|x| gsea_result_to_dict(x, py).unwrap())
+            .collect();
+        final_results.push(converted);
+    }
+    Ok(final_results)
+}
+
+/// Run a meta-analysis GSEA with provided rank files.
+///
+/// # Parameters
+/// - `gmt_path` - `String` of the path to the gmt file of interest
+/// - `rank_lists` -  Lists of `list[tuple[str, float]]`s of the rank lists of interest.
+///
+/// # Returns
+///
+/// Returns a list of a list of dictionaries with the results containing the GSEA results for every set.
+///
+/// The first list contains the results of the meta-analysis. The following lists are the results for each list individually.
+///
+/// # Panics
+///
+/// Panics if the any file is malformed or not at specified path.
+///
+/// # Example
+///
+/// ```python
+/// import webgestaltpy
+///
+/// res = webgestaltpy.meta_gsea("kegg.gmt", ["rank_list1.txt", "rank_list2.txt"])
+/// ```
+///
+/// `res` would be a list containing the results of the meta-analysis and each list run
+/// individually. In this example, `res[0]` would look be the results of the meta-analysis.
+/// `res[1]` would be the results from `rank_list1.txt`, `res[2]` would be the results from `rank_list2.txt`, and so on.
+///
+/// See the documentation for [`webgestaltpy.gsea`](./gsea.md) for specifics about the format of the results.
+#[pyfunction]
+fn meta_gsea<'a>(
+    py: Python<'a>,
+    gmt: String,
+    rank_lists: Vec<Vec<(String, f64)>>,
+) -> PyResult<Vec<Vec<&'a PyDict>>> {
+    let mut jobs: Vec<GSEAJob> = Vec::new();
+    let gmt_vec: Vec<Item> = webgestalt_lib::readers::read_gmt_file(gmt).unwrap();
+    for rank_file in rank_lists {
+        let analyte_list = rank_file
+            .iter()
+            .map(|(analyte, value)| RankListItem {
+                analyte: analyte.clone(),
+                rank: *value,
+            })
+            .collect();
+        let new_job = GSEAJob {
+            gmt: gmt_vec.clone(),
+            rank_list: analyte_list,
+            config: GSEAConfig::default(),
+        };
+        jobs.push(new_job);
     }
 
     let rust_result = multilist_gsea(
@@ -408,12 +491,12 @@ fn meta_gsea(py: Python, gmt: String, rank_files: Vec<String>) -> PyResult<Vec<V
 /// ]
 /// ```
 #[pyfunction]
-fn ora_from_files(
-    py: Python,
+fn ora_from_files<'a>(
+    py: Python<'a>,
     gmt_path: String,
     analyte_list_path: String,
     reference_list_path: String,
-) -> PyResult<Vec<&PyDict>> {
+) -> PyResult<Vec<&'a PyDict>> {
     let (gmt, analyte_list, reference) =
         webgestalt_lib::readers::read_ora_files(gmt_path, analyte_list_path, reference_list_path);
     let res: Vec<ORAResult> =
@@ -473,12 +556,12 @@ fn ora_from_files(
 /// ]
 /// ```
 #[pyfunction]
-fn ora(
-    py: Python,
+fn ora<'a>(
+    py: Python<'a>,
     gmt_path: String,
     analyte_list: Vec<String>,
     reference_list: Vec<String>,
-) -> PyResult<Vec<&PyDict>> {
+) -> PyResult<Vec<&'a PyDict>> {
     let gmt = webgestalt_lib::readers::read_gmt_file(gmt_path).unwrap();
     let reference: AHashSet<String> = reference_list.into_iter().collect();
     let analyte_list: AHashSet<String> = analyte_list.into_iter().collect();
@@ -522,12 +605,12 @@ fn ora(
 ///
 /// See the documentation for [`webgestaltpy.ora`](./ora.md) for specifics about the format of the results.
 #[pyfunction]
-fn meta_ora(
-    py: Python,
+fn meta_ora<'a>(
+    py: Python<'a>,
     gmt_path: String,
     analyte_list_paths: Vec<String>,
     reference_list_paths: Vec<String>,
-) -> PyResult<Vec<Vec<&PyDict>>> {
+) -> PyResult<Vec<Vec<&'a PyDict>>> {
     if analyte_list_paths.len() != reference_list_paths.len() {
         // Verify list sizes
         Err(PyValueError::new_err(format!(
@@ -575,11 +658,17 @@ fn meta_ora(
 fn webgestaltpy(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(gsea, m)?)?;
     m.add_function(wrap_pyfunction!(gsea_from_files, m)?)?;
-    m.add_function(wrap_pyfunction!(ora_from_files, m)?)?;
+
     m.add_function(wrap_pyfunction!(ora, m)?)?;
+    m.add_function(wrap_pyfunction!(ora_from_files, m)?)?;
+
     m.add_function(wrap_pyfunction!(meta_gsea, m)?)?;
+    m.add_function(wrap_pyfunction!(meta_gsea_from_files, m)?)?;
+
     m.add_function(wrap_pyfunction!(meta_ora, m)?)?;
+
     m.add_class::<NTAMethod>()?;
     m.add_function(wrap_pyfunction!(nta, m)?)?;
+
     Ok(())
 }
