@@ -974,11 +974,11 @@
 <h2 id="example">Example</h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">webgestaltpy</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">res</span> <span class="o">=</span> <span class="n">webgestaltpy</span><span class="o">.</span><span class="n">meta_ora_from_files</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;gene_list1.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;gene_list2.txt&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;reference.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;reference.txt&quot;</span><span class="p">])</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">res</span> <span class="o">=</span> <span class="n">webgestaltpy</span><span class="o">.</span><span class="n">meta_ora_from_files</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;genelist.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;second_genelist.txt&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;reference.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;reference.txt&quot;</span><span class="p">])</span>
 </span></code></pre></div>
 <p><code>res</code> would be a list containing the results of the meta-analysis and each list run
 individually. In this example, <code>res[0]</code> would look be the results of the meta-analysis.
-<code>res[1]</code> would be the results from <code>gene_list1.txt</code>, <code>res[2]</code> would be the results from <code>gene_list2.txt</code>, and so on.</p>
+<code>res[1]</code> would be the results from <code>genelist.txt</code>, <code>res[2]</code> would be the results from <code>second_genelist.txt</code>, and so on.</p>
 <p>See the documentation for <a href="../ora/"><code>webgestaltpy.ora</code></a> for specifics about the format of the results.</p>
 
 

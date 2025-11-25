@@ -959,23 +959,31 @@
 
 
 <h1 id="ora"><code>ora</code></h1>
-<p>Run a single-omic ORA with gmt file and list of analytes and reference provided as strings.</p>
+<p>Run a single-omic ORA with gmt file and list of analytes and reference provided as list of strings.</p>
 <h2 id="parameters">Parameters</h2>
 <ul>
-<li><code>gmt_path</code> - <code>String</code> of the path to the gmt file of interest</li>
-<li><code>analyte_list_path</code> - <code>String</code> of the path to the analyte file of interest.</li>
-<li><code>reference_list_path</code></li>
+<li><code>gmt_path</code> - <code>str</code> of the path to the gmt file of interest</li>
+<li><code>analyte_list</code> - <code>list[str]</code> of the analyte list of interest.</li>
+<li><code>reference_list</code> - <code>list[str]</code> of the reference list. Typically all observed analytes.</li>
 </ul>
 <h2 id="returns">Returns</h2>
 <p>Returns a list of dictionaries with the results containing the ORA results for every set.</p>
 <h2 id="panics">Panics</h2>
-<p>Panics if the any file is malformed or not at specified path.</p>
+<p>Panics if the any file or list is malformed or not at specified path.</p>
 <h2 id="example">Example</h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">webgestaltpy</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">res</span> <span class="o">=</span> <span class="n">webgestaltpy</span><span class="o">.</span><span class="n">ora</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="n">gene_list</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span> <span class="c1">## gene_list and reference are both list[str]</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span> <span class="c1">## print first two results</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">file_to_list</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert file to list[str]&quot;&quot;&quot;</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">r</span><span class="p">:</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">gene_list</span> <span class="o">=</span> <span class="n">file_to_list</span><span class="p">(</span><span class="s2">&quot;genelist.txt&quot;</span><span class="p">)</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">reference</span> <span class="o">=</span> <span class="n">file_to_list</span><span class="p">(</span><span class="s2">&quot;reference.txt&quot;</span><span class="p">)</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">res</span> <span class="o">=</span> <span class="n">webgestaltpy</span><span class="o">.</span><span class="n">ora</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="n">gene_list</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span> <span class="c1">## gene_list and reference are both list[str]</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span> <span class="c1">## print first two results</span>
 </span></code></pre></div>
 <p><strong>Output</strong></p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[

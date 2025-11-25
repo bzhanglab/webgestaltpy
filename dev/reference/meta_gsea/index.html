@@ -959,7 +959,7 @@
 
 
 <h1 id="meta_gsea"><code>meta_gsea</code></h1>
-<p>Run a meta-analysis GSEA with provided rank files.</p>
+<p>Run a meta-analysis GSEA with provided rank objects.</p>
 <h2 id="parameters">Parameters</h2>
 <ul>
 <li><code>gmt_path</code> - <code>String</code> of the path to the gmt file of interest</li>
@@ -969,7 +969,7 @@
 <p>Returns a list of a list of dictionaries with the results containing the GSEA results for every set.</p>
 <p>The first list contains the results of the meta-analysis. The following lists are the results for each list individually.</p>
 <h2 id="panics">Panics</h2>
-<p>Panics if the any file is malformed or not at specified path.</p>
+<p>Panics if the any file or list is malformed or not at specified path.</p>
 <h2 id="example">Example</h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">webgestaltpy</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
@@ -990,11 +990,11 @@
 </span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>            <span class="n">vals</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
 </span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">float</span><span class="p">(</span><span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
 </span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="k">return</span> <span class="n">re</span><span class="o">/</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="n">res</span> <span class="o">=</span> <span class="n">webgestaltpy</span><span class="o">.</span><span class="n">meta_gsea</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">create_rank_list</span><span class="p">(</span><span class="s2">&quot;rank_list1.txt&quot;</span><span class="p">),</span> <span class="n">create_rank_list</span><span class="p">(</span><span class="s2">&quot;rank_list2.txt&quot;</span><span class="p">)])</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="n">res</span> <span class="o">=</span> <span class="n">webgestaltpy</span><span class="o">.</span><span class="n">meta_gsea</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">create_rank_list</span><span class="p">(</span><span class="s2">&quot;test.rnk&quot;</span><span class="p">),</span> <span class="n">create_rank_list</span><span class="p">(</span><span class="s2">&quot;second_test.rnk&quot;</span><span class="p">)])</span>
 </span></code></pre></div>
 <p><code>res</code> would be a list containing the results of the meta-analysis and each list run
 individually. In this example, <code>res[0]</code> would look be the results of the meta-analysis.
-<code>res[1]</code> would be the results from <code>rank_list1.txt</code>, <code>res[2]</code> would be the results from <code>rank_list2.txt</code>, and so on.</p>
+<code>res[1]</code> would be the results from <code>test.rnk</code>, <code>res[2]</code> would be the results from <code>second_test.rnk</code>, and so on.</p>
 <p>See the documentation for <a href="../gsea/"><code>webgestaltpy.gsea</code></a> for specifics about the format of the results.</p>
 
 

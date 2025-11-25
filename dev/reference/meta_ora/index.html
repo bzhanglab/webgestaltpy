@@ -959,18 +959,18 @@
 
 
 <h1 id="meta_ora"><code>meta_ora</code></h1>
-<p>Run a meta-analysis ORA with files at the provided paths.</p>
+<p>Run a meta-analysis ORA with analyte lists and reference lists given as python objects.</p>
 <h2 id="parameters">Parameters</h2>
 <ul>
 <li><code>gmt_path</code> - <code>String</code> of the path to the gmt file of interest</li>
-<li><code>analyte_list_paths</code> -  Lists of <code>String</code>s of the path to the analyte files of interest.</li>
-<li><code>reference_list_paths</code> - Lists of <code>String</code>s of the paths to reference lists.</li>
+<li><code>analyte_lists</code> -  Lists of list[str] which are the analyte lists of interests</li>
+<li><code>reference_lists</code> - Lists of list[str] which are the reference list for each corresponding analyte list</li>
 </ul>
 <h2 id="returns">Returns</h2>
 <p>Returns a list of a list of dictionaries with the results containing the ORA results for every set.</p>
 <p>The first list contains the results of the meta-analysis. The following lists are the results for each list individually.</p>
 <h2 id="panics">Panics</h2>
-<p>Panics if the any file is malformed or not at specified path.</p>
+<p>Panics if the any list or file is malformed or not at specified path.</p>
 <h2 id="example">Example</h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">webgestaltpy</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
@@ -981,13 +981,13 @@
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">res</span> <span class="o">=</span> <span class="n">webgestaltpy</span><span class="o">.</span><span class="n">meta_ora</span><span class="p">(</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="p">[</span><span class="n">file_to_list</span><span class="p">(</span><span class="s2">&quot;gene_list1.txt&quot;</span><span class="p">),</span> <span class="n">file_to_list</span><span class="p">(</span><span class="s2">&quot;gene_list2.txt&quot;</span><span class="p">)],</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="p">[</span><span class="n">file_to_list</span><span class="p">(</span><span class="s2">&quot;genelist.txt&quot;</span><span class="p">),</span> <span class="n">file_to_list</span><span class="p">(</span><span class="s2">&quot;second_genelist.txt&quot;</span><span class="p">)],</span>
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="p">[</span><span class="n">file_to_list</span><span class="p">(</span><span class="s2">&quot;reference.txt&quot;</span><span class="p">),</span> <span class="n">file_to_list</span><span class="p">(</span><span class="s2">&quot;reference.txt&quot;</span><span class="p">)],</span>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">)</span>
 </span></code></pre></div>
 <p><code>res</code> would be a list containing the results of the meta-analysis and each list run
 individually. In this example, <code>res[0]</code> would look be the results of the meta-analysis.
-<code>res[1]</code> would be the results from <code>gene_list1.txt</code>, <code>res[2]</code> would be the results from <code>gene_list2.txt</code>, and so on.</p>
+<code>res[1]</code> would be the results from <code>genelist.txt</code>, <code>res[2]</code> would be the results from <code>second_genelist.txt</code>, and so on.</p>
 <p>See the documentation for <a href="../ora/"><code>webgestaltpy.ora</code></a> for specifics about the format of the results.</p>
 
 

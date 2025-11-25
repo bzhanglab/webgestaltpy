@@ -963,12 +963,12 @@
 <h2 id="parameters">Parameters</h2>
 <ul>
 <li><code>gmt_path</code> - <code>String</code> of the path to the gmt file of interest</li>
-<li><code>rank_list</code> - <code>list[tuple[str, float]]</code> of the path to the rank file of interest. Tab separated.</li>
+<li><code>rank_list</code> - <code>list[tuple[str, float]]</code> the rank list of interest.</li>
 </ul>
 <h2 id="returns">Returns</h2>
 <p>Returns a list containing the GSEA results for every set.</p>
 <h2 id="panics">Panics</h2>
-<p>Panics if the GMT or the rank file is malformed or not at specified path.</p>
+<p>Panics if the GMT or the rank list is malformed or not at specified path.</p>
 <h2 id="example">Example</h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">webgestaltpy</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
@@ -990,7 +990,7 @@
 </span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">float</span><span class="p">(</span><span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
 </span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="k">return</span> <span class="n">res</span>
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="n">res</span> <span class="o">=</span> <span class="n">webgestaltpy</span><span class="o">.</span><span class="n">gsea</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="n">create_rank_list</span><span class="p">(</span><span class="s2">&quot;example_ranked_list.rnk&quot;</span><span class="p">))</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="n">res</span> <span class="o">=</span> <span class="n">webgestaltpy</span><span class="o">.</span><span class="n">gsea</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="n">create_rank_list</span><span class="p">(</span><span class="s2">&quot;test.rnk&quot;</span><span class="p">))</span>
 </span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
 </span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span> <span class="c1">## print first two results</span>
 </span></code></pre></div>
