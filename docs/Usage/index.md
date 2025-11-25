@@ -8,7 +8,7 @@ For the following examples, the example data can be found here: [data.tar.gz :oc
 ```python title="ora_test.py"
 import WebGestaltPy
 
-res = WebGestaltPy.ora("kegg.gmt", "genelist.txt", "reference.txt")
+res = WebGestaltPy.ora_from_files("kegg.gmt", "genelist.txt", "reference.txt")
 ```
 
 ## Meta-analysis ORA Example
@@ -17,7 +17,7 @@ res = WebGestaltPy.ora("kegg.gmt", "genelist.txt", "reference.txt")
 ```python title="meta_ora_test.py"
 import WebGestaltPy
 
-res = WebGestaltPy.meta_ora("kegg.gmt", ["genelist.txt", "second_genelist.txt"],
+res = WebGestaltPy.meta_ora_from_files("kegg.gmt", ["genelist.txt", "second_genelist.txt"],
                       ["reference.txt", "reference.txt"])
 ```
 
@@ -26,7 +26,7 @@ res = WebGestaltPy.meta_ora("kegg.gmt", ["genelist.txt", "second_genelist.txt"],
 ```python title="gsea_test.py"
 import WebGestaltPy
 
-res = WebGestaltPy.gsea("kegg.gmt", "test.rnk")
+res = WebGestaltPy.gsea_from_files("kegg.gmt", "test.rnk")
 ```
 
 ## Meta-analysis GSEA Example
@@ -34,7 +34,7 @@ res = WebGestaltPy.gsea("kegg.gmt", "test.rnk")
 ```python title="meta_gsea_test.py"
 import WebGestaltPy
 
-res = WebGestaltPy.meta_gsea("kegg.gmt", ["test.rnk", "second_test.rnk"])
+res = WebGestaltPy.meta_gsea_from_files("kegg.gmt", ["test.rnk", "second_test.rnk"])
 ```
 
 ## NTA Example
@@ -42,5 +42,5 @@ res = WebGestaltPy.meta_gsea("kegg.gmt", ["test.rnk", "second_test.rnk"])
 ```python title="nta_test.py"
 import WebGestaltPy
 nta_method = webgestaltpy.NTAMethod.Prioritization
-res = webgestaltpy.nta("data/hsapiens_network_CPTAC_Proteomics_OV_entrezgene.net", "data/net_genes.txt", nta_method, 5)
+res = webgestaltpy.nta_from_files("data/hsapiens_network_CPTAC_Proteomics_OV_entrezgene.net", "data/net_genes.txt", nta_method, 5)
 ```

@@ -75,7 +75,7 @@ mod webgestaltpy {
     ///
     /// # Parameters
     /// - `edge_list_path` - `String` of the path to the edge list file of the network. See below for details.
-    /// - `analyte_list_path` - `String` of the path to the rank file of interest, with analytes separated by new lines
+    /// - `analyte_list_path` - `String` of the path to the seed nodes, with entries separated by new lines
     /// - `nta_method` - a `NTAMethod` object specifying the NTA method for the analysis.
     /// - `n` - the number of seeds or nodes to identify according to `nta_method`
     ///
@@ -93,7 +93,99 @@ mod webgestaltpy {
     /// import webgestaltpy
     ///
     /// nta_method = webgestaltpy.NTAMethod.Prioritization
-    /// y = webgestaltpy.nta("data/hsapiens_network_CPTAC_Proteomics_OV_entrezgene.net", "data/net_genes.txt", nta_method, 5)
+    /// y = webgestaltpy.nta_from_files("data/hsapiens_network_CPTAC_Proteomics_OV_entrezgene.net", "data/net_genes.txt", nta_method, 5)
+    /// print(y)
+    /// ```
+    ///
+    /// **Output**
+    ///
+    /// ```
+    /// {
+    ///   'candidates': [
+    ///     'ACTA1',
+    ///     'ACTA2',
+    ///     'ACTB',
+    ///     'ACTG1'
+    ///   ],
+    ///   'scores': [
+    ///     0.015611545101449542,
+    ///     0.015611545101449542,
+    ///     0.015227515228472441,
+    ///     0.015227515228472441,
+    ///     0.015105514420304793
+    ///   ],
+    ///   'neighborhood': [
+    ///     'ACTA1',
+    ///     'ACTA2',
+    ///     'ACTB',
+    ///     'ACTG1',
+    ///     'ACTG2'
+    ///   ]
+    /// }
+    /// ```
+    #[pyfunction]
+    fn nta_from_files<'a>(
+        py: Python<'a>,
+        edge_list_path: String,
+        analyte_list_path: String,
+        nta_method: &'a NTAMethod,
+        n: usize,
+    ) -> PyResult<pyo3::Bound<'a, PyDict>> {
+        let net_file = webgestalt_lib::readers::read_edge_list(edge_list_path);
+        let analytes = webgestalt_lib::readers::read_single_list(analyte_list_path);
+        let method = match nta_method {
+            NTAMethod::Expansion => webgestalt_lib::methods::nta::NTAMethod::Expand(n),
+            NTAMethod::Prioritization => webgestalt_lib::methods::nta::NTAMethod::Prioritize(n),
+        };
+        let res = webgestalt_lib::methods::nta::get_nta(NTAConfig {
+            edge_list: net_file,
+            seeds: analytes.into_iter().collect(),
+            method: Option::Some(method),
+            ..Default::default()
+        });
+        let new_res = nta_result_to_dict(res, py)?;
+        Ok(new_res)
+    }
+
+    /// Run single-omic NTA (Network-topology based analysis) with edge list and list of starting analytes/nodes
+    ///
+    /// # Parameters
+    /// - `edge_list` - `list[list[str]]` of the network which is a list of lists where each entry is a node.
+    /// - `analyte_list` - `list[str]` of analytes for starting the NTA with.
+    /// - `nta_method` - a `NTAMethod` object specifying the NTA method for the analysis.
+    /// - `n` - the number of seeds or nodes to identify according to `nta_method`
+    ///
+    /// # Returns
+    ///
+    /// Returns a dictionary object containing the `candidates` (seed nodes when using prioritization), `scores` (random-walk probabilities), and `neighborhood` (identified nodes)
+    ///
+    /// # Panics
+    ///
+    /// Panics if the network or the analyte file is malformed or not at specified path. Will also panic if `nta_method` is not specified correctly
+    ///
+    /// # Example
+    ///
+    /// ```python
+    /// import webgestaltpy
+    ///
+    /// def file_to_list(file_path: str) -> list[str]:
+    ///     """Convert file to list[str]"""
+    ///     with open(file_path, "r") as r:
+    ///         return list(r.readlines())
+    ///
+    /// def read_network(file_path: str) -> list[list[str]]:
+    ///     """Read .net file to format for nta()"""
+    ///     with open(file_path, "r") as r:
+    ///         lines = r.readlines()
+    ///     net = []
+    ///     for line in lines:
+    ///         if "\t" in line:
+    ///             net.append(line.split("\t"))
+    ///     return net
+    ///
+    /// nta_method = webgestaltpy.NTAMethod.Prioritization
+    /// y = webgestaltpy.nta(read_network("data/hsapiens_network_CPTAC_Proteomics_OV_entrezgene.net"),
+    ///                      file_to_list("data/net_genes.txt"(), nta_method, 5)
     /// print(y)
     /// ```
     ///
@@ -126,19 +218,18 @@ mod webgestaltpy {
     #[pyfunction]
     fn nta<'a>(
         py: Python<'a>,
-        edge_list_path: String,
-        analyte_list_path: String,
+        edge_list: Vec<Vec<String>>,
+        analyte_list: Vec<String>,
         nta_method: &'a NTAMethod,
         n: usize,
     ) -> PyResult<pyo3::Bound<'a, PyDict>> {
-        let net_file = webgestalt_lib::readers::read_edge_list(edge_list_path);
-        let analytes = webgestalt_lib::readers::read_single_list(analyte_list_path);
+        let analytes: AHashSet<String> = analyte_list.into_iter().collect();
         let method = match nta_method {
             NTAMethod::Expansion => webgestalt_lib::methods::nta::NTAMethod::Expand(n),
             NTAMethod::Prioritization => webgestalt_lib::methods::nta::NTAMethod::Prioritize(n),
         };
         let res = webgestalt_lib::methods::nta::get_nta(NTAConfig {
-            edge_list: net_file,
+            edge_list,
             seeds: analytes.into_iter().collect(),
             method: Option::Some(method),
             ..Default::default()
@@ -328,7 +419,7 @@ mod webgestaltpy {
     /// ```python
     /// import webgestaltpy
     ///
-    /// res = webgestaltpy.meta_gsea("kegg.gmt", ["rank_list1.txt", "rank_list2.txt"])
+    /// res = webgestaltpy.meta_gsea_from_files("kegg.gmt", ["rank_list1.txt", "rank_list2.txt"])
     /// ```
     ///
     /// `res` would be a list containing the results of the meta-analysis and each list run
@@ -401,7 +492,24 @@ mod webgestaltpy {
     /// ```python
     /// import webgestaltpy
     ///
-    /// res = webgestaltpy.meta_gsea("kegg.gmt", ["rank_list1.txt", "rank_list2.txt"])
+    /// def create_rank_list(file_path: str) -> list[tuple[str, float]]:
+    ///     """Function that converts rnk file to format for gsea().
+    ///
+    ///     This is for demo purposes. gsea_from_files would be more convenient in this case.
+    ///     However, for when the scores are calculated in a Python script, gsea() allows you to directly
+    ///     use the results without having to save to a file first.
+    ///
+    ///     """
+    ///
+    ///     res = []
+    ///     with open(file_path, "r") as r:
+    ///         lines = r.readlines()
+    ///     for line in lines:
+    ///         if "\t" in line:
+    ///             vals = line.split("\t")
+    ///             res.append((vals[0], float(vals[1])))
+    ///     return re/
+    /// res = webgestaltpy.meta_gsea("kegg.gmt", [create_rank_list("rank_list1.txt"), create_rank_list("rank_list2.txt")])
     /// ```
     ///
     /// `res` would be a list containing the results of the meta-analysis and each list run
@@ -543,7 +651,7 @@ mod webgestaltpy {
     /// ```python
     /// import webgestaltpy
     ///
-    /// res = webgestaltpy.ora("kegg.gmt", gene_list, reference)
+    /// res = webgestaltpy.ora("kegg.gmt", gene_list, reference) # gene_list and reference are both list[str]
     ///
     /// print(res[0:2]) # print first two results
     /// ```
@@ -612,10 +720,19 @@ mod webgestaltpy {
     ///
     /// # Example
     ///
-    /// ```python
+    ///```python
     /// import webgestaltpy
     ///
-    /// res = webgestaltpy.meta_ora("kegg.gmt", ["gene_list1.txt", "gene_list2.txt"], ["reference.txt", "reference.txt"])
+    /// def file_to_list(file_path: str) -> list[str]:
+    ///     """Convert file to list[str]"""
+    ///     with open(file_path, "r") as r:
+    ///         return list(r.readlines())
+    ///
+    /// res = webgestaltpy.meta_ora(
+    ///     "kegg.gmt",
+    ///     [file_to_list("gene_list1.txt"), file_to_list("gene_list2.txt")],
+    ///     [file_to_list("reference.txt"), file_to_list("reference.txt")],
+    /// )
     /// ```
     ///
     /// `res` would be a list containing the results of the meta-analysis and each list run
@@ -693,7 +810,7 @@ mod webgestaltpy {
     /// ```python
     /// import webgestaltpy
     ///
-    /// res = webgestaltpy.meta_ora("kegg.gmt", ["gene_list1.txt", "gene_list2.txt"], ["reference.txt", "reference.txt"])
+    /// res = webgestaltpy.meta_ora_from_files("kegg.gmt", ["gene_list1.txt", "gene_list2.txt"], ["reference.txt", "reference.txt"])
     /// ```
     ///
     /// `res` would be a list containing the results of the meta-analysis and each list run
