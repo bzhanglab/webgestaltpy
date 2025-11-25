@@ -9,6 +9,6 @@ name = "webgestaltpy"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = "0.20.2"
-rustc-hash = "1.1.0"
+ahash = "0.8.12"
+pyo3 = "0.27.1"
 webgestalt_lib = "0.3.2"

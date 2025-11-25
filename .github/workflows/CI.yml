@@ -11,7 +11,7 @@ on:
       - main
       - master
     tags:
-      - '*'
+      - "*"
   pull_request:
   workflow_dispatch:
 
@@ -117,7 +117,7 @@ jobs:
     strategy:
       matrix:
         platform:
-          - runner: macos-13
+          - runner: macos-15
             target: x86_64
           - runner: macos-14
             target: aarch64
@@ -171,7 +171,7 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
         with:
-          subject-path: 'wheels-*/*'
+          subject-path: "wheels-*/*"
       - name: Publish to PyPI
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
         uses: PyO3/maturin-action@v1
@@ -210,11 +210,7 @@ jobs:
           command: build
       - run: pip install .
       - run: python build_docs.py
-      - name: Extract branch name
-        shell: bash
-        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-        id: extract_branch
       - name: Deploy with mike 🚀
         run: |
           git fetch origin gh-pages
-          mike deploy --update-aliases --push ${{ env.tag_name }} latest
+          mike deploy --update-aliases --push ${{ github.ref_name }} latest
