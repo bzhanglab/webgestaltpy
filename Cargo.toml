@@ -10,6 +10,5 @@ crate-type = ["cdylib"]
 
 [dependencies]
 ahash = "0.8.12"
-pyo3 = "0.20.2"
-rustc-hash = "1.1.0"
+pyo3 = "0.27.1"
 webgestalt_lib = "0.3.2"
