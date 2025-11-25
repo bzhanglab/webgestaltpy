@@ -2,7 +2,7 @@ use ahash::AHashSet;
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
-use webgestalt_lib::methods::gsea::{GSEAConfig, GSEAResult};
+use webgestalt_lib::methods::gsea::{GSEAConfig, GSEAResult, RankListItem};
 use webgestalt_lib::methods::multilist::{multilist_gsea, multilist_ora, GSEAJob, ORAJob};
 use webgestalt_lib::methods::nta::{NTAConfig, NTAResult};
 use webgestalt_lib::methods::ora::{ORAConfig, ORAResult};
@@ -158,7 +158,7 @@ fn nta<'a>(
 /// ```python
 /// import webgestaltpy
 ///
-/// res = webgestaltpy.gsea("kegg.gmt", "example_ranked_list.rnk")
+/// res = webgestaltpy.gsea_from_files("kegg.gmt", "example_ranked_list.rnk")
 ///
 /// print(res[0:2]) # print first two results
 /// ```
@@ -186,7 +186,7 @@ fn nta<'a>(
 /// ]
 /// ```
 #[pyfunction]
-fn gsea(py: Python, gmt_path: String, rank_file_path: String) -> PyResult<Vec<&PyDict>> {
+fn gsea_from_files(py: Python, gmt_path: String, rank_file_path: String) -> PyResult<Vec<&PyDict>> {
     let analyte_list = webgestalt_lib::readers::read_rank_file(rank_file_path);
     let gmt = webgestalt_lib::readers::read_gmt_file(gmt_path);
     let res: Vec<GSEAResult> = webgestalt_lib::methods::gsea::gsea(
@@ -202,6 +202,94 @@ fn gsea(py: Python, gmt_path: String, rank_file_path: String) -> PyResult<Vec<&P
     Ok(new_res)
 }
 
+/// Run single-omic GSEA with a gmt and a rank list in form of `list[tuple[str, float]]`.
+///
+/// # Parameters
+/// - `gmt_path` - `String` of the path to the gmt file of interest
+/// - `rank_list` - `list[tuple[str, float]]` of the path to the rank file of interest. Tab separated.
+///
+/// # Returns
+///
+/// Returns a list containing the GSEA results for every set.
+///
+/// # Panics
+///
+/// Panics if the GMT or the rank file is malformed or not at specified path.
+///
+/// # Example
+///
+/// ```python
+/// import webgestaltpy
+///
+/// def create_rank_list(file_path: str) -> list[tuple[str, float]]:
+///     """Function that converts rnk file to format for gsea().
+///
+///     This is for demo purposes. gsea_from_files would be more convenient in this case.
+///     However, for when the scores are calculated in a Python script, gsea() allows you to directly
+///     use the results without having to save to a file first.
+///
+///     """
+///
+///     res = []
+///     with open(file_path, "r") as r:
+///         lines = r.readlines()
+///     for line in lines:
+///         if "\t" in line:
+///             vals = line.split("\t")
+///             res.append((vals[0], float(vals[1])))
+///     return res
+///
+/// res = webgestaltpy.gsea("kegg.gmt", create_rank_list("example_ranked_list.rnk"))
+///
+/// print(res[0:2]) # print first two results
+/// ```
+///
+/// **Output**
+///
+/// _Your results may vary depending on random permutations_
+///  
+/// ```
+/// [
+///   {
+///     'set': 'has00010',
+///     'p': 0.353,
+///     'fdr': 1.0,
+///     'es': 0.40653028852961814,
+///     'nes': 1.07659486501464,
+///     'leading_edge': 24
+///   },
+///   {
+///     'set': 'has00020',
+///     'p': 0,
+///     'fdr': 0.028834551777982824,
+///     'es': 0.6216527702210619,
+///     'nes': 1.5721004858071521,
+///     'leading_edge': 20
+///   }
+/// ]
+/// ```
+#[pyfunction]
+fn gsea(py: Python, gmt_path: String, rank_file: Vec<(String, f64)>) -> PyResult<Vec<&PyDict>> {
+    let analyte_list = rank_file
+        .iter()
+        .map(|(analyte, value)| RankListItem {
+            analyte: analyte.clone(),
+            rank: *value,
+        })
+        .collect();
+    let gmt = webgestalt_lib::readers::read_gmt_file(gmt_path);
+    let res: Vec<GSEAResult> = webgestalt_lib::methods::gsea::gsea(
+        analyte_list,
+        gmt.unwrap(),
+        GSEAConfig::default(),
+        None,
+    );
+    let new_res: Vec<&PyDict> = res
+        .into_iter()
+        .map(|x| gsea_result_to_dict(x, py).unwrap())
+        .collect();
+    Ok(new_res)
+}
 
 /// Run a meta-analysis GSEA with files at the provided paths.
 ///
@@ -486,6 +574,7 @@ fn meta_ora(
 #[pymodule]
 fn webgestaltpy(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(gsea, m)?)?;
+    m.add_function(wrap_pyfunction!(gsea_from_files, m)?)?;
     m.add_function(wrap_pyfunction!(ora_from_files, m)?)?;
     m.add_function(wrap_pyfunction!(ora, m)?)?;
     m.add_function(wrap_pyfunction!(meta_gsea, m)?)?;
