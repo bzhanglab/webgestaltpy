@@ -8,13 +8,11 @@
       
       
       
-        <link rel="canonical" href="https://bzhanglab.github.io/webgestaltpy/dev/reference/ora/">
+        <link rel="canonical" href="https://bzhanglab.github.io/webgestaltpy/dev/reference/ora_from_files/">
       
       
-        <link rel="prev" href="../nta_from_files/">
+        <link rel="prev" href="../ora/">
       
-      
-        <link rel="next" href="../ora_from_files/">
       
       
         
@@ -25,7 +23,7 @@
     
     
       
-        <title>ora - WebGestaltPy</title>
+        <title>ora_from_files - WebGestaltPy</title>
       
     
     
@@ -74,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ora" class="md-skip">
+        <a href="#ora_from_files" class="md-skip">
           Skip to content
         </a>
       
@@ -123,7 +121,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ora
+              ora_from_files
             
           </span>
         </div>
@@ -718,6 +716,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../ora/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ora
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -737,7 +763,7 @@
   <span class="md-ellipsis">
     
   
-    ora
+    ora_from_files
   
 
     
@@ -755,7 +781,7 @@
   <span class="md-ellipsis">
     
   
-    ora
+    ora_from_files
   
 
     
@@ -828,34 +854,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../ora_from_files/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ora_from_files
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -958,8 +956,8 @@
   
 
 
-<h1 id="ora"><code>ora</code></h1>
-<p>Run a single-omic ORA with gmt file and list of analytes and reference provided as strings.</p>
+<h1 id="ora_from_files"><code>ora_from_files</code></h1>
+<p>Run a single-omic ORA with files at the provided paths.</p>
 <h2 id="parameters">Parameters</h2>
 <ul>
 <li><code>gmt_path</code> - <code>String</code> of the path to the gmt file of interest</li>
@@ -973,7 +971,7 @@
 <h2 id="example">Example</h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">webgestaltpy</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">res</span> <span class="o">=</span> <span class="n">webgestaltpy</span><span class="o">.</span><span class="n">ora</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="n">gene_list</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span> <span class="c1">## gene_list and reference are both list[str]</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">res</span> <span class="o">=</span> <span class="n">webgestaltpy</span><span class="o">.</span><span class="n">ora_from_files</span><span class="p">(</span><span class="s2">&quot;kegg.gmt&quot;</span><span class="p">,</span> <span class="s2">&quot;gene_list.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;reference.txt&quot;</span><span class="p">)</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span> <span class="c1">## print first two results</span>
 </span></code></pre></div>
